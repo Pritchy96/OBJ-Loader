@@ -65,16 +65,10 @@ void display(){
   glBegin(GL_POLYGON);
 
   glColor3f( 0, 0.5, 0.0 );   
-
-  
-  glVertex3f((float) atof(splitString[1][2].c_str()), (float) atof(splitString[1][3].c_str()), (float) atof(splitString[1][4].c_str()) );      
-  glVertex3f((float) atof(splitString[2][2].c_str()), (float) atof(splitString[2][3].c_str()), (float) atof(splitString[2][4].c_str()) );   
+  glVertex3f((float) atof(splitString[0][2].c_str()), (float) atof(splitString[0][3].c_str()), (float) atof(splitString[0][4].c_str()) );      
+  glVertex3f((float) atof(splitString[1][2].c_str()), (float) atof(splitString[1][3].c_str()), (float) atof(splitString[1][4].c_str()) );   
+  glVertex3f((float) atof(splitString[2][2].c_str()), (float) atof(splitString[2][3].c_str()), (float) atof(splitString[2][4].c_str()) );     
   glVertex3f((float) atof(splitString[3][2].c_str()), (float) atof(splitString[3][3].c_str()), (float) atof(splitString[3][4].c_str()) );     
-  glVertex3f((float) atof(splitString[4][2].c_str()), (float) atof(splitString[4][3].c_str()), (float) atof(splitString[4][4].c_str()) );     
-
-cout << splitString[0][2] << endl;
-cout << splitString[0][3] << endl;
-cout << splitString[0][4] << "\n" << endl;
 
   glEnd();
 
@@ -152,11 +146,12 @@ void ReadFile()
     while ( getline (file, currentLine) )
     {
 		//If this line begins with a V..
-		if(0 == currentLine.find("v")) 
+		if(currentLine.find("v") == 0) 
 		{
-			i++;
+			
 			stringstream stream(currentLine);
 			int j = 0;
+			
 
 			//Split String into string array, if there is a new line.
 			while( getline(stream, splitString[i][j], ' ') )
@@ -171,6 +166,8 @@ void ReadFile()
 				cout << splitString[i][2] << endl;
 				cout << splitString[i][3] << endl;
 				cout << splitString[i][4] << "\n" << endl;
+
+				i++;
 		}
     }
     file.close();

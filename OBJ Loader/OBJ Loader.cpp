@@ -65,7 +65,7 @@ void display(){
 
 
   //Front.
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 200; i++)
 	{
 	  //Vertex to draw, gotten from the current poly in strArrPolys.
 	  int vertToDraw = 0;
@@ -82,6 +82,7 @@ void display(){
 		  (float) atof(strArrVerts[vertToDraw] [4].c_str()) 
 		  );      
 
+	  glColor3f( 0, 0, 0.6 );  
 	  vertToDraw = (int) atof(strArrPoly[i][2].c_str()) - 1;
 	  glVertex3f(
 		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
@@ -89,6 +90,7 @@ void display(){
 		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
 		  );   
 
+	  glColor3f( 0.2, 0, 0.0 );  
 	  vertToDraw = (int) atof(strArrPoly[i][3].c_str()) - 1;
 	  glVertex3f(
 		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
@@ -96,6 +98,7 @@ void display(){
 		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
 		  );     
 
+	  glColor3f( 0.5, 0, 0.5 );  
 	  vertToDraw = (int) atof(strArrPoly[i][4].c_str()) - 1;
 	  glVertex3f(
 		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
@@ -168,7 +171,7 @@ int main(int argc, char* argv[]){
 
 void ReadFile()
 {
-  ifstream file ("cube.obj");
+  ifstream file ("sphere.obj");
 
   string currentLine = "";
   

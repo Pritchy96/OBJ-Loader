@@ -37,7 +37,9 @@ void ReadFile();
 // ----------------------------------------------------------
 double rotate_y=0;
 double rotate_x=0;
-string splitString[500][5];
+
+string strArrVerts[500][5];
+string strArrPoly[500][5];
 
 // ----------------------------------------------------------
 // display() Callback function
@@ -65,10 +67,10 @@ void display(){
   glBegin(GL_POLYGON);
 
   glColor3f( 0, 0.5, 0.0 );   
-  glVertex3f((float) atof(splitString[0][2].c_str()), (float) atof(splitString[0][3].c_str()), (float) atof(splitString[0][4].c_str()) );      
-  glVertex3f((float) atof(splitString[1][2].c_str()), (float) atof(splitString[1][3].c_str()), (float) atof(splitString[1][4].c_str()) );   
-  glVertex3f((float) atof(splitString[2][2].c_str()), (float) atof(splitString[2][3].c_str()), (float) atof(splitString[2][4].c_str()) );     
-  glVertex3f((float) atof(splitString[3][2].c_str()), (float) atof(splitString[3][3].c_str()), (float) atof(splitString[3][4].c_str()) );     
+  glVertex3f((float) atof(strArrVerts[0][2].c_str()), (float) atof(strArrVerts[0][3].c_str()), (float) atof(strArrVerts[0][4].c_str()) );      
+  glVertex3f((float) atof(strArrVerts[1][2].c_str()), (float) atof(strArrVerts[1][3].c_str()), (float) atof(strArrVerts[1][4].c_str()) );   
+  glVertex3f((float) atof(strArrVerts[2][2].c_str()), (float) atof(strArrVerts[2][3].c_str()), (float) atof(strArrVerts[2][4].c_str()) );     
+  glVertex3f((float) atof(strArrVerts[3][2].c_str()), (float) atof(strArrVerts[3][3].c_str()), (float) atof(strArrVerts[3][4].c_str()) );     
 
   glEnd();
 
@@ -99,7 +101,7 @@ void specialKeys( int key, int x, int y ) {
   //  Request display update
   glutPostRedisplay();
 
-}
+} 
 
 // ----------------------------------------------------------
 // main() function
@@ -115,7 +117,7 @@ int main(int argc, char* argv[]){
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
   // Create window
-  glutCreateWindow("Awesome Cube");
+  glutCreateWindow("OBJ Loader");
 
   //  Enable Z-buffer depth test
   glEnable(GL_DEPTH_TEST);
@@ -140,36 +142,63 @@ void ReadFile()
   
   if (file.is_open())
   {
-	  int i = 0;
+	  int vertIncrement = 0;
+	  int polyIncrement = 0;
 
 	//While we are not at the end of a file (gets the line from file if not)
     while ( getline (file, currentLine) )
     {
-		//If this line begins with a V..
+		stringstream stream(currentLine);		//Allows String Manipulation
+		int j = 0;		//Row Iterator for both String Arrays.
+
+		#pragma region ADDING_VERTICIES
+
+		//If it finds an v at position 0 of the string (line begins with a v)
 		if(currentLine.find("v") == 0) 
 		{
-			
-			stringstream stream(currentLine);
-			int j = 0;
-			
-
 			//Split String into string array, if there is a new line.
-			while( getline(stream, splitString[i][j], ' ') )
+			while( getline(stream, strArrVerts[vertIncrement][j], ' ') )
 			{
-				//Increment i so we put the next split in the next array index.
+				//Increment j so we put the next value in the next column.
 				j++;
 			}
+				//Debug.
+				cout << "Vert" << endl;
+				cout << strArrVerts[vertIncrement][2] <<  endl;
+				cout << strArrVerts[vertIncrement][3] << endl;
+				cout << strArrVerts[vertIncrement][4] << "\n" << endl;
 
-			//We now have a completed string array.
-				
-
-				cout << splitString[i][2] << endl;
-				cout << splitString[i][3] << endl;
-				cout << splitString[i][4] << "\n" << endl;
-
-				i++;
+				//Increment vertIncrement so we put the next split in the next array row.
+				vertIncrement++;
 		}
+
+		#pragma endregion
+
+		#pragma region ADDING_POLYGONS
+
+		//If it finds an f at position 0 of the string (line begins with a v)
+		else if(currentLine.find("f") == 0) 
+		{
+			//Split String into string array, if there is a new line.
+			while( getline(stream, strArrPoly[polyIncrement][j], ' ') )
+			{
+				//Increment j so we put the next value in the next column.
+				j++;
+			}
+				//Debug.
+				cout << "Poly" << endl;
+				cout << strArrPoly[polyIncrement][1] <<  endl;
+				cout << strArrPoly[polyIncrement][2] <<  endl;
+				cout << strArrPoly[polyIncrement][3] << endl;
+				cout << strArrPoly[polyIncrement][4] << "\n" << endl;
+
+				//Increment vertIncrement so we put the next split in the next array row.
+				vertIncrement++;
+		}
+
+		#pragma endregion
     }
+	//We now have a completed file load.
     file.close();
   }
 

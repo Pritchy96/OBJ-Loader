@@ -63,16 +63,48 @@ void display(){
   // Other Transformations
    glScalef( 0.5, 0.5, 0.5 );          // Not included
 
+
   //Front.
-  glBegin(GL_POLYGON);
+    for (int i = 0; i < 6; i++)
+	{
+	  //Vertex to draw, gotten from the current poly in strArrPolys.
+	  int vertToDraw = 0;
 
-  glColor3f( 0, 0.5, 0.0 );   
-  glVertex3f((float) atof(strArrVerts[0][2].c_str()), (float) atof(strArrVerts[0][3].c_str()), (float) atof(strArrVerts[0][4].c_str()) );      
-  glVertex3f((float) atof(strArrVerts[1][2].c_str()), (float) atof(strArrVerts[1][3].c_str()), (float) atof(strArrVerts[1][4].c_str()) );   
-  glVertex3f((float) atof(strArrVerts[2][2].c_str()), (float) atof(strArrVerts[2][3].c_str()), (float) atof(strArrVerts[2][4].c_str()) );     
-  glVertex3f((float) atof(strArrVerts[3][2].c_str()), (float) atof(strArrVerts[3][3].c_str()), (float) atof(strArrVerts[3][4].c_str()) );     
+	  glBegin(GL_POLYGON);
+	  glColor3f( 0, 0.5, 0.0 );  
+	  
+	  //Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
+	  vertToDraw = (int) atof(strArrPoly[i][1].c_str()) - 1;
+	  //Draws Vertex, getting the coords from strArrVerts.
+	  glVertex3f( 
+		  (float) atof(strArrVerts[vertToDraw] [2].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw] [3].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw] [4].c_str()) 
+		  );      
 
-  glEnd();
+	  vertToDraw = (int) atof(strArrPoly[i][2].c_str()) - 1;
+	  glVertex3f(
+		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  );   
+
+	  vertToDraw = (int) atof(strArrPoly[i][3].c_str()) - 1;
+	  glVertex3f(
+		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  );     
+
+	  vertToDraw = (int) atof(strArrPoly[i][4].c_str()) - 1;
+	  glVertex3f(
+		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  );     
+
+	  glEnd();
+	}
 
   glFlush();
   glutSwapBuffers();
@@ -136,7 +168,7 @@ int main(int argc, char* argv[]){
 
 void ReadFile()
 {
-  ifstream file ("plane.obj");
+  ifstream file ("cube.obj");
 
   string currentLine = "";
   
@@ -193,7 +225,7 @@ void ReadFile()
 				cout << strArrPoly[polyIncrement][4] << "\n" << endl;
 
 				//Increment vertIncrement so we put the next split in the next array row.
-				vertIncrement++;
+				polyIncrement++;
 		}
 
 		#pragma endregion

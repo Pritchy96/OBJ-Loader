@@ -27,7 +27,7 @@ using namespace std;
 
 // ----------------------------------------------------------
 // Function Prototypes
-// ----------------------------------------------------------C:\Windows\SysWOW64\
+// ----------------------------------------------------------C:\Windows\SysWOW64
 void display();
 void specialKeys();
 void ReadFile();
@@ -37,9 +37,11 @@ void ReadFile();
 // ----------------------------------------------------------
 double rotate_y=0;
 double rotate_x=0;
+double rotate_z=0;
+double scale = 0.5;
 
-string strArrVerts[500][5];
-string strArrPoly[500][5];
+string strArrVerts[6000][5];
+string strArrPoly[6000][5];
 
 // ----------------------------------------------------------
 // display() Callback function
@@ -59,13 +61,14 @@ void display(){
   // Rotate when user changes rotate_x and rotate_y
   glRotatef( rotate_x, 1.0, 0.0, 0.0 );
   glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+  glRotatef(rotate_z, 0.0, 0.0, 1.0);
 
   // Other Transformations
-   glScalef( 0.5, 0.5, 0.5 );          // Not included
+   glScalef( scale, scale, scale );          // Not included
 
 
   //Front.
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < 6000; i++)
 	{
 	  //Vertex to draw, gotten from the current poly in strArrPolys.
 	  int vertToDraw = 0;
@@ -121,17 +124,23 @@ void specialKeys( int key, int x, int y ) {
 
   //  Right arrow - increase rotation by 5 degree
   if (key == GLUT_KEY_RIGHT)
-    rotate_y += 5;
+    rotate_z += 5;
 
   //  Left arrow - decrease rotation by 5 degree
   else if (key == GLUT_KEY_LEFT)
-    rotate_y -= 5;
+    rotate_z -= 5;
 
   else if (key == GLUT_KEY_UP)
     rotate_x += 5;
 
   else if (key == GLUT_KEY_DOWN)
     rotate_x -= 5;
+
+  else if (key == GLUT_KEY_PAGE_UP)
+    scale += 0.01;
+
+    else if (key == GLUT_KEY_PAGE_DOWN)
+    scale -= 0.01;
 
   //  Request display update
   glutPostRedisplay();
@@ -171,7 +180,7 @@ int main(int argc, char* argv[]){
 
 void ReadFile()
 {
-  ifstream file ("sphere.obj");
+  ifstream file ("torus knot HD.obj");
 
   string currentLine = "";
   

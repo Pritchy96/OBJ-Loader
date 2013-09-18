@@ -40,8 +40,8 @@ double rotate_x=0;
 double rotate_z=0;
 double scale = 0.5;
 
-string strArrVerts[6000][5];
-string strArrPoly[6000][5];
+vector< vector<String> > strVcrVerts;;
+vector< vector<String> > strVcrPolys;;
 
 // ----------------------------------------------------------
 // display() Callback function
@@ -67,46 +67,46 @@ void display(){
    glScalef( scale, scale, scale );          // Not included
 
 
-  //Front.
-    for (int i = 0; i < 6000; i++)
+      //Iterate until we have completeted all polygons.
+    for (int i = 0; i < strVcrPolys.size; i++)
 	{
-	  //Vertex to draw, gotten from the current poly in strArrPolys.
+	  //Vertex to draw, gotten from the current poly in strVcrPolys.
 	  int vertToDraw = 0;
 
 	  glBegin(GL_POLYGON);
 	  glColor3f( 0, 0.5, 0.0 );  
 	  
 	  //Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
-	  vertToDraw = (int) atof(strArrPoly[i][1].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPoly[i][1].c_str()) - 1;
 	  //Draws Vertex, getting the coords from strArrVerts.
 	  glVertex3f( 
-		  (float) atof(strArrVerts[vertToDraw] [2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw] [3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw] [4].c_str()) 
+		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
 		  );      
 
 	  glColor3f( 0, 0, 0.6 );  
-	  vertToDraw = (int) atof(strArrPoly[i][2].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPoly[i][2].c_str()) - 1;
 	  glVertex3f(
-		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
 		  );   
 
 	  glColor3f( 0.2, 0, 0.0 );  
-	  vertToDraw = (int) atof(strArrPoly[i][3].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPoly[i][3].c_str()) - 1;
 	  glVertex3f(
-		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
 		  );     
 
 	  glColor3f( 0.5, 0, 0.5 );  
-	  vertToDraw = (int) atof(strArrPoly[i][4].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPoly[i][4].c_str()) - 1;
 	  glVertex3f(
-		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
 		  );     
 
 	  glEnd();
@@ -193,29 +193,41 @@ void ReadFile()
     while ( getline (file, currentLine) )
     {
 		stringstream stream(currentLine);		//Allows String Manipulation
-		int j = 0;		//Row Iterator for both String Arrays.
+		int j = 0;		//Column Iterator for both String Arrays.
+		string split = '';	//Reciprocal for split value for inserting into Vector.
 
 		#pragma region ADDING_VERTICIES
-
 		//If it finds an v at position 0 of the string (line begins with a v)
 		if(currentLine.find("v") == 0) 
 		{
 			//Split String into string array, if there is a new line.
-			while( getline(stream, strArrVerts[vertIncrement][j], ' ') )
+			while( getline(stream, split, ' ') )
 			{
+				//May need to do somethign like "If there is no index at j
+				//on the mster array, create it, THEN insert the split value into
+				//the child array. Initial attempt below.
+				
+				//Add a new row if needed.
+				if (strVcrVerts.Size() < vertIncrement)
+					{
+						//Adds a new item to end of Vector.
+						strVcrVerts.Push_Back("")
+						
+					}
+				//Insert 'split' into Vector at the correct position.
+				strVcrVerts.insert(strVcrVerts[vertIncrement][j], split)
 				//Increment j so we put the next value in the next column.
 				j++;
 			}
 				//Debug.
 				cout << "Vert" << endl;
-				cout << strArrVerts[vertIncrement][2] <<  endl;
-				cout << strArrVerts[vertIncrement][3] << endl;
-				cout << strArrVerts[vertIncrement][4] << "\n" << endl;
+				cout << strVcrVerts[vertIncrement][2] <<  endl;
+				cout << strVcrVerts[vertIncrement][3] << endl;
+				cout << strVcrVerts[vertIncrement][4] << "\n" << endl;
 
 				//Increment vertIncrement so we put the next split in the next array row.
 				vertIncrement++;
 		}
-
 		#pragma endregion
 
 		#pragma region ADDING_POLYGONS
@@ -223,18 +235,21 @@ void ReadFile()
 		//If it finds an f at position 0 of the string (line begins with a v)
 		else if(currentLine.find("f") == 0) 
 		{
+			//TODO: Don't split the line here, simple copy to a 1D Vector.
 			//Split String into string array, if there is a new line.
-			while( getline(stream, strArrPoly[polyIncrement][j], ' ') )
+			while( getline(stream, split, ' ') )
 			{
+				//Insert 'split' into Vector at the correct position.
+				strVcrPolys.insert(strVcrPolys[PolyIncrement][j], split)
 				//Increment j so we put the next value in the next column.
 				j++;
 			}
 				//Debug.
 				cout << "Poly" << endl;
-				cout << strArrPoly[polyIncrement][1] <<  endl;
-				cout << strArrPoly[polyIncrement][2] <<  endl;
-				cout << strArrPoly[polyIncrement][3] << endl;
-				cout << strArrPoly[polyIncrement][4] << "\n" << endl;
+				cout << strVcrPolys[polyIncrement][1] <<  endl;
+				cout << strVcrPolys[polyIncrement][2] <<  endl;
+				cout << strVcrPolys[polyIncrement][3] << endl;
+				cout << strVcrPolys[polyIncrement][4] << "\n" << endl;
 
 				//Increment vertIncrement so we put the next split in the next array row.
 				polyIncrement++;
@@ -248,3 +263,65 @@ void ReadFile()
 
   else cout << "Unable to open file"; 
 }
+
+
+
+
+
+
+//2D Vector Initialisation and resizing.
+#pragma region VECTOR_TESTING
+int num_of_col = 5;
+int num_of_row = 9;
+double init_value = 0;
+
+vector< vector<String> > strPolyVcr;
+//now we have an empty 2D-matrix of size (0,0). Resizing it with one single command:
+strPolyVcr.resize( num_of col , vector<double>( num_of_row , init_value ) );
+// and we are good to go ...  
+
+strPolyVcr.insert ( 1 , "200" );
+#pragma endregion
+
+
+
+		//Replace Array with this.
+		vector< vector<String> > strVcrVerts;
+
+		stringstream stream(currentLine);	//Allows String Manipulation
+		int j = 0;	//Row Iterator for both String Arrays.
+
+		#pragma region ADDING_VERTICIES
+		//If it finds an v at position 0 of the string (line begins with a v)
+		if(currentLine.find("v") == 0) 
+		{
+			//Reciprocal for split value for inserting into Vector.
+			string split = '';
+			//Split String into string array, if there is a new line.
+			while( getline(stream, split, ' ') )
+			{
+				//Insert 'split' into Vector at the correct position.
+				strVcrVerts.insert(strVcrVerts[vertIncrement][j], split)
+				//Increment j so we put the next value in the next column.
+				j++;
+			}
+				//Debug.
+				cout << "Vert" << endl;
+				cout << strVcrVerts[vertIncrement][2] <<  endl;
+				cout << strVcrVerts[vertIncrement][3] << endl;
+				cout << strVcrVerts[vertIncrement][4] << "\n" << endl;
+
+				//Increment vertIncrement so we put the next split in the next array row.
+				vertIncrement++;
+		}
+		#pragma endregion
+
+		//Vert Drawing Example.
+ 		glVertex3f( 
+		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
+		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
+		  ); 
+		  
+
+			

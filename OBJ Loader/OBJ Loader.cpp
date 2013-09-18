@@ -203,47 +203,38 @@ void ReadFile()
 			//Split String into string array, if there is a new line.
 			while( getline(stream, split[j], ' ') )
 			{
-				//May need to do somethign like "If there is no index at j
-				//on the mster array, create it, THEN insert the split value into
-				//the child array. Initial attempt below.
-				
-				//Add a new row if needed.
-				if (strVcrVerts.Size() < vertIncrement)
-					{
-						//Adds a new item to end of Vector.
-						strVcrVerts.Push_Back("")
-						
-					}
-				//Insert 'split' into Vector at the correct position.
-				strVcrVerts.insert(strVcrVerts[vertIncrement][j], split)
 				//Increment j so we put the next value in the next column.
 				j++;
 			}
+			
+				//Adds the finished 'split' to end of strVcrVerts.
+				strVcrVerts.Push_Back(split)
+						
 				//Debug.
 				cout << "Vert" << endl;
 				cout << strVcrVerts[vertIncrement][2] <<  endl;
 				cout << strVcrVerts[vertIncrement][3] << endl;
 				cout << strVcrVerts[vertIncrement][4] << "\n" << endl;
-
+				
 				//Increment vertIncrement so we put the next split in the next array row.
 				vertIncrement++;
 		}
 		#pragma endregion
 
 		#pragma region ADDING_POLYGONS
-
 		//If it finds an f at position 0 of the string (line begins with a v)
 		else if(currentLine.find("f") == 0) 
 		{
-			//TODO: Don't split the line here, simple copy to a 1D Vector.
 			//Split String into string array, if there is a new line.
-			while( getline(stream, split, ' ') )
+			while( getline(stream, split[j], ' ') )
 			{
-				//Insert 'split' into Vector at the correct position.
-				strVcrPolys.insert(strVcrPolys[PolyIncrement][j], split)
 				//Increment j so we put the next value in the next column.
 				j++;
 			}
+			
+				//Adds the finished 'split' to end of strVcrVerts.
+				strVcrPolys.Push_Back(split)
+				
 				//Debug.
 				cout << "Poly" << endl;
 				cout << strVcrPolys[polyIncrement][1] <<  endl;
@@ -254,7 +245,6 @@ void ReadFile()
 				//Increment vertIncrement so we put the next split in the next array row.
 				polyIncrement++;
 		}
-
 		#pragma endregion
     }
 	//We now have a completed file load.
@@ -281,9 +271,6 @@ strPolyVcr.resize( num_of col , vector<double>( num_of_row , init_value ) );
 // and we are good to go ...  
 
 strPolyVcr.insert ( 1 , "200" );
-#pragma endregion
-
-
 
 		//Replace Array with this.
 		vector< vector<String> > strVcrVerts;
@@ -323,5 +310,6 @@ strPolyVcr.insert ( 1 , "200" );
 		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
 		  ); 
 		  
+#pragma endregion
 
 			

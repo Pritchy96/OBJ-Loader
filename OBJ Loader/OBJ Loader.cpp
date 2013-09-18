@@ -11,6 +11,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 
 
 #include <stdarg.h>
@@ -40,8 +41,9 @@ double rotate_x=0;
 double rotate_z=0;
 double scale = 0.5;
 
-vector< vector<String> > strVcrVerts;;
-vector< vector<String> > strVcrPolys;;
+//2D vectors holding vert and poly data.
+vector<vector<string>> strVcrVerts;
+vector<vector<string>> strVcrPolys;
 
 // ----------------------------------------------------------
 // display() Callback function
@@ -68,7 +70,7 @@ void display(){
 
 
       //Iterate until we have completeted all polygons.
-    for (int i = 0; i < strVcrPolys.size; i++)
+    for (int i = 0; i < strVcrPolys.size(); i++)
 	{
 	  //Vertex to draw, gotten from the current poly in strVcrPolys.
 	  int vertToDraw = 0;
@@ -77,7 +79,7 @@ void display(){
 	  glColor3f( 0, 0.5, 0.0 );  
 	  
 	  //Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
-	  vertToDraw = (int) atof(strVcrPoly[i][1].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPolys[i][1].c_str()) - 1;
 	  //Draws Vertex, getting the coords from strArrVerts.
 	  glVertex3f( 
 		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
@@ -86,7 +88,7 @@ void display(){
 		  );      
 
 	  glColor3f( 0, 0, 0.6 );  
-	  vertToDraw = (int) atof(strVcrPoly[i][2].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPolys[i][2].c_str()) - 1;
 	  glVertex3f(
 		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
 		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
@@ -94,7 +96,7 @@ void display(){
 		  );   
 
 	  glColor3f( 0.2, 0, 0.0 );  
-	  vertToDraw = (int) atof(strVcrPoly[i][3].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPolys[i][3].c_str()) - 1;
 	  glVertex3f(
 		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
 		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
@@ -102,7 +104,7 @@ void display(){
 		  );     
 
 	  glColor3f( 0.5, 0, 0.5 );  
-	  vertToDraw = (int) atof(strVcrPoly[i][4].c_str()) - 1;
+	  vertToDraw = (int) atof(strVcrPolys[i][4].c_str()) - 1;
 	  glVertex3f(
 		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
 		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
@@ -194,7 +196,9 @@ void ReadFile()
     {
 		stringstream stream(currentLine);		//Allows String Manipulation
 		int j = 0;		//Column Iterator for both String Arrays.
-		vector<string> split;	//Reciprocal for split value for inserting into Vector.
+
+		vector<string> split ;	//Reciprocal for split value for inserting into Vector.
+		split.resize(1, "");
 
 		#pragma region ADDING_VERTICIES
 		//If it finds an v at position 0 of the string (line begins with a v)
@@ -203,12 +207,13 @@ void ReadFile()
 			//Split String into string array, if there is a new line.
 			while( getline(stream, split[j], ' ') )
 			{
+				split.push_back("");
 				//Increment j so we put the next value in the next column.
 				j++;
 			}
 			
 				//Adds the finished 'split' to end of strVcrVerts.
-				strVcrVerts.Push_Back(split)
+				strVcrVerts.push_back(split);
 						
 				//Debug.
 				cout << "Vert" << endl;
@@ -228,12 +233,13 @@ void ReadFile()
 			//Split String into string array, if there is a new line.
 			while( getline(stream, split[j], ' ') )
 			{
+				split.push_back("");
 				//Increment j so we put the next value in the next column.
 				j++;
 			}
 			
 				//Adds the finished 'split' to end of strVcrVerts.
-				strVcrPolys.Push_Back(split)
+				strVcrPolys.push_back(split);
 				
 				//Debug.
 				cout << "Poly" << endl;
@@ -255,11 +261,7 @@ void ReadFile()
 }
 
 
-
-
-
-
-//2D Vector Initialisation and resizing.
+/*2D Vector Initialisation and resizing.
 #pragma region VECTOR_TESTING
 int num_of_col = 5;
 int num_of_row = 9;
@@ -312,4 +314,4 @@ strPolyVcr.insert ( 1 , "200" );
 		  
 #pragma endregion
 
-			
+		*/

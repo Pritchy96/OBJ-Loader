@@ -4,7 +4,7 @@
 
 
 // ----------------------------------------------------------
-// Includes
+// Includes 
 // ----------------------------------------------------------
 #include "stdafx.h"
 #include <iostream>
@@ -194,14 +194,14 @@ void ReadFile()
     {
 		stringstream stream(currentLine);		//Allows String Manipulation
 		int j = 0;		//Column Iterator for both String Arrays.
-		string split = '';	//Reciprocal for split value for inserting into Vector.
+		vector<string> split;	//Reciprocal for split value for inserting into Vector.
 
 		#pragma region ADDING_VERTICIES
 		//If it finds an v at position 0 of the string (line begins with a v)
 		if(currentLine.find("v") == 0) 
 		{
 			//Split String into string array, if there is a new line.
-			while( getline(stream, split, ' ') )
+			while( getline(stream, split[j], ' ') )
 			{
 				//May need to do somethign like "If there is no index at j
 				//on the mster array, create it, THEN insert the split value into

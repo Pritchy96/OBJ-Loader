@@ -41,11 +41,9 @@ double rotate_z=0;
 double scale = 0.5;
 
 string strArrVerts[6000][5];
-string strArrPoly[6000][5];
+string strArrPolys[6000][5];
 
-// ----------------------------------------------------------
 // display() Callback function
-// ----------------------------------------------------------
 void display(){
 
   //  Clear screen and Z-buffer
@@ -55,16 +53,15 @@ void display(){
   glLoadIdentity();
 
   // Other Transformations
-  // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
-  // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
+  // glTranslatef( 0.1, 0.0, 0.0 );
 
-  // Rotate when user changes rotate_x and rotate_y
+  // Rotation.
   glRotatef( rotate_x, 1.0, 0.0, 0.0 );
   glRotatef( rotate_y, 0.0, 1.0, 0.0 );
   glRotatef(rotate_z, 0.0, 0.0, 1.0);
 
   // Other Transformations
-   glScalef( scale, scale, scale );          // Not included
+   glScalef( scale, scale, scale ); 
 
 
   //Front.
@@ -75,38 +72,37 @@ void display(){
 
 	  glBegin(GL_POLYGON);
 	  glColor3f( 0, 0.5, 0.0 );  
-	  
-	  //Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
-	  vertToDraw = (int) atof(strArrPoly[i][1].c_str()) - 1;
+	  //Finds the row of the vert to draw in strArrVerts by finding which number strArrPolys is looking for.
+	  vertToDraw = (int) atof(strArrPolys[i][0].c_str()) - 1;
 	  //Draws Vertex, getting the coords from strArrVerts.
 	  glVertex3f( 
-		  (float) atof(strArrVerts[vertToDraw] [2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw] [3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw] [4].c_str()) 
+		  (float) atof(strArrVerts[vertToDraw] [0].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw] [1].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw] [2].c_str()) 
 		  );      
 
 	  glColor3f( 0, 0, 0.6 );  
-	  vertToDraw = (int) atof(strArrPoly[i][2].c_str()) - 1;
+	  vertToDraw = (int) atof(strArrPolys[i][1].c_str()) - 1;
 	  glVertex3f(
-		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  (float) atof(strArrVerts[vertToDraw][0].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][1].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][2].c_str()) 
 		  );   
 
 	  glColor3f( 0.2, 0, 0.0 );  
-	  vertToDraw = (int) atof(strArrPoly[i][3].c_str()) - 1;
+	  vertToDraw = (int) atof(strArrPolys[i][2].c_str()) - 1;
 	  glVertex3f(
-		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  (float) atof(strArrVerts[vertToDraw][0].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][1].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][2].c_str()) 
 		  );     
 
 	  glColor3f( 0.5, 0, 0.5 );  
-	  vertToDraw = (int) atof(strArrPoly[i][4].c_str()) - 1;
+	  vertToDraw = (int) atof(strArrPolys[i][3].c_str()) - 1;
 	  glVertex3f(
-		  (float) atof(strArrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strArrVerts[vertToDraw][4].c_str()) 
+		  (float) atof(strArrVerts[vertToDraw][0].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][1].c_str()), 
+		  (float) atof(strArrVerts[vertToDraw][2].c_str()) 
 		  );     
 
 	  glEnd();
@@ -122,37 +118,42 @@ void display(){
 // ----------------------------------------------------------
 void specialKeys( int key, int x, int y ) {
 
-  //  Right arrow - increase rotation by 5 degree
-  if (key == GLUT_KEY_RIGHT)
-    rotate_z += 5;
-
-  //  Left arrow - decrease rotation by 5 degree
-  else if (key == GLUT_KEY_LEFT)
-    rotate_z -= 5;
-
-  else if (key == GLUT_KEY_UP)
-    rotate_x += 5;
-
-  else if (key == GLUT_KEY_DOWN)
-    rotate_x -= 5;
-
-  else if (key == GLUT_KEY_PAGE_UP)
-    scale += 0.01;
-
-    else if (key == GLUT_KEY_PAGE_DOWN)
-    scale -= 0.01;
-
-  //  Request display update
+  //Increase/Decrease Rotation. (degrees)
+	switch (key)
+	{
+	case (GLUT_KEY_RIGHT):
+		rotate_z += 5;
+		break;
+	case (GLUT_KEY_LEFT):
+		rotate_z -= 5;
+		break;
+	case (GLUT_KEY_UP):
+		rotate_x += 5;
+		break;
+	case (GLUT_KEY_DOWN):
+		rotate_x -= 5;
+		break;
+	case (GLUT_KEY_PAGE_UP):
+		scale += 0.01;
+		break;
+	case (GLUT_KEY_PAGE_DOWN):
+		scale -= 0.01;
+		break;
+	case (GLUT_KEY_F4):
+		glutDestroyWindow(0);
+		exit(0);
+		break;
+	}
+  //  update display.
   glutPostRedisplay();
 
 } 
 
-// ----------------------------------------------------------
 // main() function
-// ----------------------------------------------------------
 int main(int argc, char* argv[]){
 
-	ReadFile();
+  //Read .OBJ file.
+  ReadFile();
 
   //  Initialize GLUT and process user parameters
   glutInit(&argc,argv);
@@ -160,11 +161,29 @@ int main(int argc, char* argv[]){
   //  Request double buffered true color window with Z-buffer
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
+  glutInitWindowSize (700, 700); 
+   glutInitWindowPosition (100, 100);
+   
   // Create window
   glutCreateWindow("OBJ Loader");
+ // glutFullScreen();
+  
+  //Resize Window
+ // glutReshapeWindow(700, 700);
 
-  //  Enable Z-buffer depth test
+  //Enable Z-buffer depth test. Draws polys in 3d space: 
+  //no overlap with polys in front/behind (last drawn polies would be on top)
   glEnable(GL_DEPTH_TEST);
+
+  //Only render polys facing the viewport.
+  glEnable(GL_CULL_FACE);
+  //Change cull style.
+  glCullFace(GL_FRONT);
+
+  //Lighting
+  //glEnable(GL_LIGHTING);
+  //glEnable(GL_LIGHT1);
+
 
   // Callback functions
   glutDisplayFunc(display);
@@ -175,12 +194,11 @@ int main(int argc, char* argv[]){
 
   //  Return to OS
   return 0;
-
 }
 
 void ReadFile()
 {
-  ifstream file ("torus knot HD.obj");
+  ifstream file ("cube.obj");
 
   string currentLine = "";
   
@@ -196,21 +214,26 @@ void ReadFile()
 		int j = 0;		//Row Iterator for both String Arrays.
 
 		#pragma region ADDING_VERTICIES
-
 		//If it finds an v at position 0 of the string (line begins with a v)
 		if(currentLine.find("v") == 0) 
 		{
 			//Split String into string array, if there is a new line.
 			while( getline(stream, strArrVerts[vertIncrement][j], ' ') )
 			{
-				//Increment j so we put the next value in the next column.
-				j++;
+				//If it's empty or a v, don't increment so it can be overwritten.
+				if (!strArrVerts[vertIncrement][j].empty()
+					&& !strArrVerts[vertIncrement][j].find("v") == 0)
+				{
+					//Increment j so we put the next value in the next column.
+					j++;
+				}
 			}
-				//Debug.
+				/*Debug.
 				cout << "Vert" << endl;
-				cout << strArrVerts[vertIncrement][2] <<  endl;
-				cout << strArrVerts[vertIncrement][3] << endl;
-				cout << strArrVerts[vertIncrement][4] << "\n" << endl;
+				cout << strArrVerts[vertIncrement][0] <<  endl;
+				cout << strArrVerts[vertIncrement][1] << endl;
+				cout << strArrVerts[vertIncrement][2] << "\n" << endl;
+				*/
 
 				//Increment vertIncrement so we put the next split in the next array row.
 				vertIncrement++;
@@ -224,17 +247,23 @@ void ReadFile()
 		else if(currentLine.find("f") == 0) 
 		{
 			//Split String into string array, if there is a new line.
-			while( getline(stream, strArrPoly[polyIncrement][j], ' ') )
+			while( getline(stream, strArrPolys[polyIncrement][j], ' ') )
 			{
-				//Increment j so we put the next value in the next column.
-				j++;
+				//If it's empty or a v, don't increment so it can be overwritten.
+				if (!strArrPolys[polyIncrement][j].empty()
+					&& !strArrPolys[polyIncrement][j].find("f") == 0)
+				{
+					//Increment j so we put the next value in the next column.
+					j++;
+				}
 			}
-				//Debug.
+				/*Debug.
 				cout << "Poly" << endl;
-				cout << strArrPoly[polyIncrement][1] <<  endl;
-				cout << strArrPoly[polyIncrement][2] <<  endl;
-				cout << strArrPoly[polyIncrement][3] << endl;
-				cout << strArrPoly[polyIncrement][4] << "\n" << endl;
+				cout << strArrPolys[polyIncrement][0] <<  endl;
+ 				cout << strArrPolys[polyIncrement][1] <<  endl;
+				cout << strArrPolys[polyIncrement][2] << endl;
+				cout << strArrPolys[polyIncrement][3] << "\n" << endl;
+				*/
 
 				//Increment vertIncrement so we put the next split in the next array row.
 				polyIncrement++;

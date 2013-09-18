@@ -45,77 +45,75 @@ double scale = 0.5;
 vector<vector<string>> strVcrVerts;
 vector<vector<string>> strVcrPolys;
 
-// ----------------------------------------------------------
+//	-------------------------------------------------------
 // display() Callback function
-// ----------------------------------------------------------
+//	-------------------------------------------------------
 void display(){
 
-  //  Clear screen and Z-buffer
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	//  Clear screen and Z-buffer
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-  // Reset transformations
-  glLoadIdentity();
+	// Reset transformations
+	glLoadIdentity();
 
-  // Other Transformations
-  // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
-  // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
+	// Other Transformations
+	// glTranslatef( 0.1, 0.0, 0.0 );
 
-  // Rotate when user changes rotate_x and rotate_y
-  glRotatef( rotate_x, 1.0, 0.0, 0.0 );
-  glRotatef( rotate_y, 0.0, 1.0, 0.0 );
-  glRotatef(rotate_z, 0.0, 0.0, 1.0);
+	// Rotation.
+	glRotatef( rotate_x, 1.0, 0.0, 0.0 );
+	glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+	glRotatef(rotate_z, 0.0, 0.0, 1.0);
 
-  // Other Transformations
-   glScalef( scale, scale, scale );          // Not included
+	// Other Transformations
+	glScalef( scale, scale, scale ); 
 
-
-      //Iterate until we have completeted all polygons.
-    for (int i = 0; i < strVcrPolys.size(); i++)
+	//Iterate until we have completeted all polygons.
+	for (int i = 0; i < strVcrPolys.size(); i++)
 	{
-	  //Vertex to draw, gotten from the current poly in strVcrPolys.
-	  int vertToDraw = 0;
+		//Vertex to draw, gotten from the current poly in strVcrPolys.
+		int vertToDraw = 0;
 
-	  glBegin(GL_POLYGON);
-	  glColor3f( 0, 0.5, 0.0 );  
-	  
-	  //Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
-	  vertToDraw = (int) atof(strVcrPolys[i][1].c_str()) - 1;
-	  //Draws Vertex, getting the coords from strArrVerts.
-	  glVertex3f( 
-		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
-		  );      
+		glBegin(GL_POLYGON);
+		glColor3f( 0, 0.5, 0.0 );  
 
-	  glColor3f( 0, 0, 0.6 );  
-	  vertToDraw = (int) atof(strVcrPolys[i][2].c_str()) - 1;
-	  glVertex3f(
-		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
-		  );   
+		//Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
+		vertToDraw = (int) atof(strVcrPolys[i][0].c_str()) - 1;
+		//Draws Vertex, getting the coords from strArrVerts.
+		glVertex3f( 
+			(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+			);      
 
-	  glColor3f( 0.2, 0, 0.0 );  
-	  vertToDraw = (int) atof(strVcrPolys[i][3].c_str()) - 1;
-	  glVertex3f(
-		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
-		  );     
+		glColor3f( 0, 0, 0.6 );  
+		vertToDraw = (int) atof(strVcrPolys[i][1].c_str()) - 1;
+		glVertex3f(
+			(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+			);   
 
-	  glColor3f( 0.5, 0, 0.5 );  
-	  vertToDraw = (int) atof(strVcrPolys[i][4].c_str()) - 1;
-	  glVertex3f(
-		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
-		  );     
+		glColor3f( 0.2, 0, 0.0 );  
+		vertToDraw = (int) atof(strVcrPolys[i][2].c_str()) - 1;
+		glVertex3f(
+			(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+			);     
 
-	  glEnd();
+		glColor3f( 0.5, 0, 0.5 );  
+		vertToDraw = (int) atof(strVcrPolys[i][3].c_str()) - 1;
+		glVertex3f(
+			(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
+			(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+			);     
+
+		glEnd();
 	}
 
-  glFlush();
-  glutSwapBuffers();
+	glFlush();
+	glutSwapBuffers();
 
 }
 
@@ -124,28 +122,34 @@ void display(){
 // ----------------------------------------------------------
 void specialKeys( int key, int x, int y ) {
 
-  //  Right arrow - increase rotation by 5 degree
-  if (key == GLUT_KEY_RIGHT)
-    rotate_z += 5;
-
-  //  Left arrow - decrease rotation by 5 degree
-  else if (key == GLUT_KEY_LEFT)
-    rotate_z -= 5;
-
-  else if (key == GLUT_KEY_UP)
-    rotate_x += 5;
-
-  else if (key == GLUT_KEY_DOWN)
-    rotate_x -= 5;
-
-  else if (key == GLUT_KEY_PAGE_UP)
-    scale += 0.01;
-
-    else if (key == GLUT_KEY_PAGE_DOWN)
-    scale -= 0.01;
-
-  //  Request display update
-  glutPostRedisplay();
+	//Increase/Decrease Rotation. (degrees)
+	switch (key)
+	{
+	case (GLUT_KEY_RIGHT):
+		rotate_z += 5;
+		break;
+	case (GLUT_KEY_LEFT):
+		rotate_z -= 5;
+		break;
+	case (GLUT_KEY_UP):
+		rotate_x += 5;
+		break;
+	case (GLUT_KEY_DOWN):
+		rotate_x -= 5;
+		break;
+	case (GLUT_KEY_PAGE_UP):
+		scale += 0.01;
+		break;
+	case (GLUT_KEY_PAGE_DOWN):
+		scale -= 0.01;
+		break;
+	case (GLUT_KEY_F4):
+		glutDestroyWindow(0);
+		exit(0);
+		break;
+	}
+	//  update display.
+	glutPostRedisplay();
 
 } 
 
@@ -154,110 +158,143 @@ void specialKeys( int key, int x, int y ) {
 // ----------------------------------------------------------
 int main(int argc, char* argv[]){
 
+	//Read .OBJ file.
 	ReadFile();
 
-  //  Initialize GLUT and process user parameters
-  glutInit(&argc,argv);
+	//  Initialize GLUT and process user parameters
+	glutInit(&argc,argv);
 
-  //  Request double buffered true color window with Z-buffer
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	//  Request double buffered true color window with Z-buffer
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-  // Create window
-  glutCreateWindow("OBJ Loader");
+	glutInitWindowSize (700, 700); 
+	glutInitWindowPosition (100, 100);
 
-  //  Enable Z-buffer depth test
-  glEnable(GL_DEPTH_TEST);
+	// Create window
+	glutCreateWindow("OBJ Loader");
+	// glutFullScreen();
 
-  // Callback functions
-  glutDisplayFunc(display);
-  glutSpecialFunc(specialKeys);
+	//Resize Window
+	// glutReshapeWindow(700, 700);
 
-  //  Pass control to GLUT for events
-  glutMainLoop();
+	//Enable Z-buffer depth test. Draws polys in 3d space: 
+	//no overlap with polys in front/behind (last drawn polies would be on top)
+	glEnable(GL_DEPTH_TEST);
 
-  //  Return to OS
-  return 0;
+	//Only render polys facing the viewport.
+	glEnable(GL_CULL_FACE);
+	//Change cull style.
+	glCullFace(GL_FRONT);
 
+	//Lighting
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT1);
+
+
+	// Callback functions
+	glutDisplayFunc(display);
+	glutSpecialFunc(specialKeys);
+
+	//  Pass control to GLUT for events
+	glutMainLoop();
+
+	//  Return to OS
+	return 0;
 }
 
+//	-------------------------------------------------------
+// Readfile() Function
+//	-------------------------------------------------------
 void ReadFile()
 {
-  ifstream file ("torus knot HD.obj");
+	ifstream file ("cube.obj");
 
-  string currentLine = "";
-  
-  if (file.is_open())
-  {
-	  int vertIncrement = 0;
-	  int polyIncrement = 0;
+	string currentLine = "";
 
-	//While we are not at the end of a file (gets the line from file if not)
-    while ( getline (file, currentLine) )
-    {
-		stringstream stream(currentLine);		//Allows String Manipulation
-		int j = 0;		//Column Iterator for both String Arrays.
+	if (file.is_open())
+	{
+		int vertIncrement = 0;
+		int polyIncrement = 0;
 
-		vector<string> split ;	//Reciprocal for split value for inserting into Vector.
-		split.resize(1, "");
-
-		#pragma region ADDING_VERTICIES
-		//If it finds an v at position 0 of the string (line begins with a v)
-		if(currentLine.find("v") == 0) 
+		//While we are not at the end of a file (gets the line from file if not)
+		while ( getline (file, currentLine) )
 		{
-			//Split String into string array, if there is a new line.
-			while( getline(stream, split[j], ' ') )
+			stringstream stream(currentLine);		//Allows String Manipulation
+			int j = 0;		//Column Iterator for both String Arrays.
+
+			vector<string> split ;	//Reciprocal for split value for inserting into Vector.
+			split.resize(1, "");
+
+			#pragma region ADDING_VERTICIES
+			//If it finds an v at position 0 of the string (line begins with a v)
+			if(currentLine.find("v") == 0) 
 			{
-				split.push_back("");
-				//Increment j so we put the next value in the next column.
-				j++;
-			}
-			
+				//Split String into string array, if there is a new line.
+				while( getline(stream, split[j], ' ') )
+				{
+					//If it's empty or a v, don't increment so it can be overwritten.
+					if (!split[j].empty() && 
+						!split[j].find("v") == 0)
+					{
+						//Add a new cell to split to be written to.
+						split.push_back("");
+						//Increment j so we put the next value in the next column.
+						j++;
+					}
+				}
+
 				//Adds the finished 'split' to end of strVcrVerts.
 				strVcrVerts.push_back(split);
-						
+
 				//Debug.
 				cout << "Vert" << endl;
-				cout << strVcrVerts[vertIncrement][2] <<  endl;
-				cout << strVcrVerts[vertIncrement][3] << endl;
-				cout << strVcrVerts[vertIncrement][4] << "\n" << endl;
-				
+				cout << strVcrVerts[vertIncrement][0] <<  endl;
+				cout << strVcrVerts[vertIncrement][1] << endl;
+				cout << strVcrVerts[vertIncrement][2] << "\n" << endl;
+
 				//Increment vertIncrement so we put the next split in the next array row.
 				vertIncrement++;
-		}
-		#pragma endregion
-
-		#pragma region ADDING_POLYGONS
-		//If it finds an f at position 0 of the string (line begins with a v)
-		else if(currentLine.find("f") == 0) 
-		{
-			//Split String into string array, if there is a new line.
-			while( getline(stream, split[j], ' ') )
-			{
-				split.push_back("");
-				//Increment j so we put the next value in the next column.
-				j++;
 			}
-			
+			#pragma endregion
+
+			#pragma region ADDING_POLYGONS
+			//If it finds an f at position 0 of the string (line begins with a v)
+			else if(currentLine.find("f") == 0) 
+			{
+				//Split String into string array, if there is a new line.
+				while( getline(stream, split[j], ' ') )
+				{
+					//If it's empty or a v, don't increment so it can be overwritten.
+					if (!split[j].empty() && 
+						!split[j].find("f") == 0)
+					{
+						//Add a new cell to split to be written to.
+						split.push_back("");
+						//Increment j so we put the next value in the next column.
+						j++;
+					}
+				}
+
 				//Adds the finished 'split' to end of strVcrVerts.
 				strVcrPolys.push_back(split);
-				
+
 				//Debug.
 				cout << "Poly" << endl;
+				cout << strVcrPolys[polyIncrement][0] <<  endl;
 				cout << strVcrPolys[polyIncrement][1] <<  endl;
-				cout << strVcrPolys[polyIncrement][2] <<  endl;
-				cout << strVcrPolys[polyIncrement][3] << endl;
-				cout << strVcrPolys[polyIncrement][4] << "\n" << endl;
+				cout << strVcrPolys[polyIncrement][2] << endl;
+				cout << strVcrPolys[polyIncrement][3] << "\n" << endl;
 
 				//Increment vertIncrement so we put the next split in the next array row.
 				polyIncrement++;
+			}
+			#pragma endregion
 		}
-		#pragma endregion
-    }
-	//We now have a completed file load.
-    file.close();
-  }
+		//We now have a completed file load.
+		file.close();
+	}
 
-  else cout << "Unable to open file"; 
+	else cout << "Unable to open file"; 
 }
 
 
@@ -274,44 +311,44 @@ strPolyVcr.resize( num_of col , vector<double>( num_of_row , init_value ) );
 
 strPolyVcr.insert ( 1 , "200" );
 
-		//Replace Array with this.
-		vector< vector<String> > strVcrVerts;
+//Replace Array with this.
+vector< vector<String> > strVcrVerts;
 
-		stringstream stream(currentLine);	//Allows String Manipulation
-		int j = 0;	//Row Iterator for both String Arrays.
+stringstream stream(currentLine);	//Allows String Manipulation
+int j = 0;	//Row Iterator for both String Arrays.
 
-		#pragma region ADDING_VERTICIES
-		//If it finds an v at position 0 of the string (line begins with a v)
-		if(currentLine.find("v") == 0) 
-		{
-			//Reciprocal for split value for inserting into Vector.
-			string split = '';
-			//Split String into string array, if there is a new line.
-			while( getline(stream, split, ' ') )
-			{
-				//Insert 'split' into Vector at the correct position.
-				strVcrVerts.insert(strVcrVerts[vertIncrement][j], split)
-				//Increment j so we put the next value in the next column.
-				j++;
-			}
-				//Debug.
-				cout << "Vert" << endl;
-				cout << strVcrVerts[vertIncrement][2] <<  endl;
-				cout << strVcrVerts[vertIncrement][3] << endl;
-				cout << strVcrVerts[vertIncrement][4] << "\n" << endl;
+#pragma region ADDING_VERTICIES
+//If it finds an v at position 0 of the string (line begins with a v)
+if(currentLine.find("v") == 0) 
+{
+//Reciprocal for split value for inserting into Vector.
+string split = '';
+//Split String into string array, if there is a new line.
+while( getline(stream, split, ' ') )
+{
+//Insert 'split' into Vector at the correct position.
+strVcrVerts.insert(strVcrVerts[vertIncrement][j], split)
+//Increment j so we put the next value in the next column.
+j++;
+}
+//Debug.
+cout << "Vert" << endl;
+cout << strVcrVerts[vertIncrement][2] <<  endl;
+cout << strVcrVerts[vertIncrement][3] << endl;
+cout << strVcrVerts[vertIncrement][4] << "\n" << endl;
 
-				//Increment vertIncrement so we put the next split in the next array row.
-				vertIncrement++;
-		}
-		#pragma endregion
-
-		//Vert Drawing Example.
- 		glVertex3f( 
-		  (float) atof(strVcrVerts[vertToDraw][2].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][3].c_str()), 
-		  (float) atof(strVcrVerts[vertToDraw][4].c_str()) 
-		  ); 
-		  
+//Increment vertIncrement so we put the next split in the next array row.
+vertIncrement++;
+}
 #pragma endregion
 
-		*/
+//Vert Drawing Example.
+glVertex3f( 
+(float) atof(strVcrVerts[vertToDraw][2].c_str()), 
+(float) atof(strVcrVerts[vertToDraw][3].c_str()), 
+(float) atof(strVcrVerts[vertToDraw][4].c_str()) 
+); 
+
+#pragma endregion
+
+*/

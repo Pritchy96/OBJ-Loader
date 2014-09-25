@@ -94,56 +94,124 @@ void display(){
 			//Y = Height = pixelHeight
 			//Z = Depth = j.
 
-			float colour1 = ((float)(pixelHeight) / 255) * 1;
-			float colour2 = 1 / ( (float) jFromZero/ (float)heightmap.TellHeight());
+			float colour = ((float)(pixelHeight) / 255) * 1;
 
-			glColor3f( colour1, colour1, colour1);  //Colour so faces can be differentiated.
-			float y = ((float) pixelHeight) / 10;
+			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
+			float height = ((float) pixelHeight) / 10;
 
 			#pragma region TOP_FACE
-			glVertex3f(		//Top Left
+			glVertex3f(		//Top Left (looking at face)
 				(float) (i), 
-				y, 
+				height, 
 				(float) (j) 
 				);    
-			glVertex3f(		//Top Right
+			glVertex3f(		//Top Right (looking at face)
 				(float) ((i + 1)), 
-				y, 
+				height, 
 				(float) (j) 
 				);    
-			glVertex3f(		//Bottom Right
+			glVertex3f(		//Bottom Right (looking at face)
 				(float) ((i + 1)), 
-				y, 
+				height, 
 				(float) ((j + 1)) 
 				);  
-			glVertex3f(		//Bottom Left
+			glVertex3f(		//Bottom Left (looking at face)
 				(float) (i), 
-				y, 
+				height, 
 				(float) ((j + 1)) 
 				);    
 			#pragma endregion
 
-			#pragma region TOP_FACE
-			glVertex3f(		//Top Left
+			#pragma region LEFT_FACE
+			glVertex3f(		//Top Left (looking at face)
 				(float) (i), 
-				y, 
+				height, 
 				(float) (j) 
 				);    
-			glVertex3f(		//Top Right
-				(float) ((i + 1)), 
-				y, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Bottom Right
-				(float) ((i + 1)), 
-				y, 
+			glVertex3f(		//Top Right (looking at face)
+				(float) (i), 
+				height, 
 				(float) ((j + 1)) 
 				);  
-			glVertex3f(		//Bottom Left
+			glVertex3f(		//Bottom Right (looking at face)
 				(float) (i), 
-				y, 
+				height - 10, 
 				(float) ((j + 1)) 
+				);  
+			glVertex3f(		//Bottom Left (looking at face)
+				(float) (i), 
+				height - 10, 
+				(float) (j) 
 				);    
+			#pragma endregion
+
+			#pragma region TOP_FACE
+			glVertex3f(		//Top Right (looking at face)
+				(float) ((i + 1)), 
+				height, 
+				(float) (j) 
+				);    
+			glVertex3f(		//Top Left (looking at face)
+				(float) ((i + 1)), 
+				height, 
+				(float) ((j + 1)) 
+				);  
+			glVertex3f(		//Bottom Left (looking at face)
+				(float) ((i + 1)), 
+				height - 10, 
+				(float) ((j + 1)) 
+				);  
+			glVertex3f(		//Top Right (looking at face)
+				(float) ((i + 1)), 
+				height - 10, 
+				(float) (j) 
+				);    
+			#pragma endregion
+
+			#pragma region FRONT_FACE 
+			glVertex3f(		//Top Right (looking at face)
+				(float) ((i + 1)), 
+				height, 
+				(float) ((j + 1)) 
+				);  
+			glVertex3f(		//Top Left (looking at face)
+				(float) (i), 
+				height, 
+				(float) ((j + 1)) 
+				);   
+			glVertex3f(		//Bottom Left (looking at face)
+				(float) (i), 
+				height - 10, 
+				(float) ((j + 1)) 
+				);  
+			glVertex3f(		//Bottom Right (looking at face)
+				(float) ((i + 1)), 
+				height - 10, 
+				(float) ((j + 1)) 
+				);  
+			#pragma endregion
+
+			#pragma region BACK_FACE
+			glVertex3f(		//Top Right (looking at face)
+				(float) (i), 
+				height, 
+				(float) (j) 
+				);    
+			glVertex3f(		//Top Left (looking at face)
+				(float) ((i + 1)), 
+				height, 
+				(float) (j) 
+				);    
+			glVertex3f(		//Bottom Left (looking at face)
+				(float) ((i + 1)), 
+				height - 10, 
+				(float) (j) 
+				);    
+			glVertex3f(		//Bottom Right (looking at face)
+				(float) (i), 
+				height - 10, 
+				(float) (j) 
+				);   
 			#pragma endregion
 			glEnd();
 		}

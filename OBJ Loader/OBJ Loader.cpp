@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include "EasyBMP.h"
 
 
 #include <stdarg.h>
@@ -32,6 +33,7 @@ using namespace std;
 void display();
 void specialKeys();
 void ReadFile();
+int wasMain();
 
 // ----------------------------------------------------------
 // Global Variables
@@ -70,6 +72,8 @@ void display(){
 
 	// Other Transformations
 	glScalef( scale, scale, scale ); 
+		
+
 
 	//Iterate until we have completeted all polygons.
 	for (int i = 0; i < strVcrPolys.size(); i++)
@@ -77,8 +81,10 @@ void display(){
 		//Vertex to draw, gotten from the current poly in strVcrPolys.
 		int vertToDraw = 0;
 
-		glBegin(GL_POLYGON);
+		glBegin(GL_POLYGON);	//Must be called for each face.
+	
 
+		//Draws a face.
 		for (int j = 0; j < strVcrPolys[i].size(); j++)
 		{
 			glColor3f( 1/(j - 0.5), 1/(0.4 + j), 1/(j - 0.3) );  
@@ -92,6 +98,23 @@ void display(){
 				(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
 				);    
 		}
+
+		/*
+				//Draws a face.
+		for (int j = 0; j < strVcrPolys[i].size(); j++)
+		{
+			glColor3f( 1/(j - 0.5), 1/(0.4 + j), 1/(j - 0.3) );  
+
+			//Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
+			vertToDraw = (int) atof(strVcrPolys[i][j].c_str()) - 1;
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
+				(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
+				(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+				);    
+		}
+		*/
 
 
 		glEnd();
@@ -142,6 +165,9 @@ void specialKeys( int key, int x, int y ) {
 // main() function
 // ----------------------------------------------------------
 int main(int argc, char* argv[]){
+
+	//Bitmap Test.
+	wasMain();
 
 	//Read .OBJ file.
 	ReadFile();
@@ -306,3 +332,31 @@ void ReadFile()
 }
 
 
+int wasMain()
+{  
+ BMP heightmap;
+ heightmap.ReadFromFile("heightmap.bmp");
+  
+ BMP Output;
+ Output.SetSize( heightmap.TellWidth() , heightmap.TellHeight() );
+ Output.SetBitDepth( 24 );
+ 
+ for (int i = 0; i < heightmap.TellWidth(); i++)
+ {
+	 for (int j = 0; j < heightmap.TellHeight(); j++)
+	{
+		RGBApixel pixel = RGBApixel();
+		pixel.Blue = heightmap.GetPixel(i, j).Blue;
+		pixel.Red = heightmap.GetPixel(i, j).Blue;
+		pixel.Green = heightmap.GetPixel(i, j).Blue;
+
+		Output.SetPixel(i, j, pixel);
+	}
+ }
+						 				
+ Output.SetBitDepth( 32 );
+ cout << "writing Image ... " << endl;					
+ Output.WriteToFile( "BWTEST.bmp" );
+
+ return 0;
+}

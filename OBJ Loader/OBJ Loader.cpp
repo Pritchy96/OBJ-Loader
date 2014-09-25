@@ -41,13 +41,9 @@ int wasMain();
 double rotate_y=0;
 double rotate_x=0;
 double rotate_z=0;
-double scale = 0.5;
+double scale = 1;
 
 static float lightPos[] = {1.0, 0.0, 1.0, 1.0}; 
-
-//2D vectors holding vert and poly data.
-vector<vector<string>> strVcrVerts;
-vector<vector<string>> strVcrPolys;
 
 bool debug = false;
 
@@ -56,6 +52,13 @@ bool debug = false;
 //	-------------------------------------------------------
 void display(){
 
+
+	#pragma region LOADING_IMAGE
+	 BMP heightmap;
+	 heightmap.ReadFromFile("HeightMap.bmp");
+	#pragma endregion
+	
+	#pragma region SET_UP_OPENGL.
 	//  Clear screen and Z-buffer
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -72,57 +75,69 @@ void display(){
 
 	// Other Transformations
 	glScalef( scale, scale, scale ); 
-		
+	#pragma endregion
 
-
-	//Iterate until we have completeted all polygons.
-	for (int i = 0; i < strVcrPolys.size(); i++)
+	//Iterate through bitmap
+	for (int i = -(heightmap.TellWidth() / 2); i < (heightmap.TellWidth()/2); i++)
 	{
-		//Vertex to draw, gotten from the current poly in strVcrPolys.
-		int vertToDraw = 0;
+		for (int j = -(heightmap.TellHeight() / 2); (j < heightmap.TellHeight() / 2); j++)
+		{
+		//Pixel Height/RBG Value
+		int pixelHeight = heightmap.GetPixel(i + (heightmap.TellWidth()/2), j + (heightmap.TellHeight()/2)).Blue;
 
 		glBegin(GL_POLYGON);	//Must be called for each face.
 	
+			//X = Width = i
+			//Y = Height = pixelHeight
+			//Z = Depth = j.
+			
+			float y = ((float) pixelHeight) / 10;
 
-		//Draws a face.
-		for (int j = 0; j < strVcrPolys[i].size(); j++)
-		{
-			glColor3f( 1/(j - 0.5), 1/(0.4 + j), 1/(j - 0.3) );  
-
-			//Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
-			vertToDraw = (int) atof(strVcrPolys[i][j].c_str()) - 1;
+			//Top Left (From Topdown)
+			glColor3f( 1/(0 - 0.5), 1/(0.4 + 0), 1/(0 - 0.3) );  //Colour so faces can be differentiated.
 			//Draws Vertex, getting the coords from strArrVerts.
 			glVertex3f( 
-				(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
-				(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
-				(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+				(float) (i), 
+				y, 
+				(float) (j) 
 				);    
-		}
-
-		/*
-				//Draws a face.
-		for (int j = 0; j < strVcrPolys[i].size(); j++)
-		{
-			glColor3f( 1/(j - 0.5), 1/(0.4 + j), 1/(j - 0.3) );  
-
-			//Finds the row of the vert to draw in strArrVerts by finding which number strArrPoly is looking for.
-			vertToDraw = (int) atof(strVcrPolys[i][j].c_str()) - 1;
+				
+			//Top Right (From Topdown)
+			glColor3f( 1/(1 - 0.5), 1/(0.4 + 1), 1/(1 - 0.3) );  //Colour so faces can be differentiated.
 			//Draws Vertex, getting the coords from strArrVerts.
 			glVertex3f( 
-				(float) atof(strVcrVerts[vertToDraw][0].c_str()), 
-				(float) atof(strVcrVerts[vertToDraw][1].c_str()), 
-				(float) atof(strVcrVerts[vertToDraw][2].c_str()) 
+				(float) ((i + 1)), 
+				y, 
+				(float) (j) 
 				);    
-		}
-		*/
+				
+		
 
+			//Bottom Right (From Topdown)
+			glColor3f( 1/(3 - 0.5), 1/(0.4 + 3), 1/(3 - 0.3) );  //Colour so faces can be differentiated.
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) ((i + 1)), 
+				y, 
+				(float) ((j + 1)) 
+				);  
+
+						//Bottom Left (From Topdown)
+			glColor3f( 1/(2 - 0.5), 1/(0.4 + 2), 1/(2 - 0.3) );  //Colour so faces can be differentiated.
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) (i), 
+				y, 
+				(float) ((j + 1)) 
+				);    
+				
 
 		glEnd();
+		}
 	}
 
 	glFlush();
 	glutSwapBuffers();
-
 }
 
 // ----------------------------------------------------------
@@ -166,20 +181,14 @@ void specialKeys( int key, int x, int y ) {
 // ----------------------------------------------------------
 int main(int argc, char* argv[]){
 
-	//Bitmap Test.
-	wasMain();
-
-	//Read .OBJ file.
-	ReadFile();
-
 	//  Initialize GLUT and process user parameters
 	glutInit(&argc,argv);
 
 	//  Request double buffered true color window with Z-buffer
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-	glutInitWindowSize (700, 700); 
-	glutInitWindowPosition (100, 100);
+	glutInitWindowSize (900, 900); 
+	glutInitWindowPosition (0, 0);
 
 	// Create window
 	glutCreateWindow("OBJ Loader");
@@ -188,9 +197,7 @@ int main(int argc, char* argv[]){
 	//Enable Z-buffer depth test. Draws polys in 3d space: 
 	//no overlap with polys in front/behind (last drawn polies would be on top)
 	glEnable(GL_DEPTH_TEST);
-
 	
-		
 	//Only render polys facing the viewport.
 	//glEnable(GL_CULL_FACE);
 	//Change cull style.
@@ -211,8 +218,6 @@ int main(int argc, char* argv[]){
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	
-
 
 	// Callback functions
 	glutDisplayFunc(display);
@@ -225,6 +230,7 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
+/*
 //	-------------------------------------------------------
 // Readfile() Function
 //	-------------------------------------------------------
@@ -330,33 +336,95 @@ void ReadFile()
 
 	else cout << "Unable to open file"; 
 }
+*/
+
+/*
+//	-------------------------------------------------------
+// display() Callback function
+//	-------------------------------------------------------
+void display(){
 
 
-int wasMain()
-{  
- BMP heightmap;
- heightmap.ReadFromFile("heightmap.bmp");
-  
- BMP Output;
- Output.SetSize( heightmap.TellWidth() , heightmap.TellHeight() );
- Output.SetBitDepth( 24 );
- 
- for (int i = 0; i < heightmap.TellWidth(); i++)
- {
-	 for (int j = 0; j < heightmap.TellHeight(); j++)
+	#pragma region LOADING_IMAGE
+	 BMP heightmap;
+	 heightmap.ReadFromFile("heightmap.bmp");
+	#pragma endregion
+	
+	#pragma region SET_UP_OPENGL.
+	//  Clear screen and Z-buffer
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+	// Reset transformations
+	glLoadIdentity();
+
+	// Other Transformations
+	// glTranslatef( 0.1, 0.0, 0.0 );
+
+	// Rotation.
+	glRotatef( rotate_x, 1.0, 0.0, 0.0 );
+	glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+	glRotatef(rotate_z, 0.0, 0.0, 1.0);
+
+	// Other Transformations
+	glScalef( scale, scale, scale ); 
+	#pragma endregion
+
+	//Iterate through bitmap
+	for (int i = 0; i < heightmap.TellWidth(); i++)
 	{
-		RGBApixel pixel = RGBApixel();
-		pixel.Blue = heightmap.GetPixel(i, j).Blue;
-		pixel.Red = heightmap.GetPixel(i, j).Blue;
-		pixel.Green = heightmap.GetPixel(i, j).Blue;
+		for (int j = 0; j < heightmap.TellHeight(); j++)
+		{
+		//Pixel Height/RBG Value
+		int pixelHeight = heightmap.GetPixel(i, j).Blue;
 
-		Output.SetPixel(i, j, pixel);
+		glBegin(GL_POLYGON);	//Must be called for each face.
+	
+			//X = Width = i
+			//Y = Height = pixelHeight
+			//Z = Depth = j.
+			
+			
+			//Top Left (From Topdown)
+			glColor3f( 1/(0 - 0.5), 1/(0.4 + 0), 1/(0 - 0.3) );  //Colour so faces can be differentiated.
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) (i * 10), 
+				(float) (pixelHeight), 
+				(float) (j * 10) 
+				);    
+				
+			//Top Right (From Topdown)
+			glColor3f( 1/(1 - 0.5), 1/(0.4 + 1), 1/(1 - 0.3) );  //Colour so faces can be differentiated.
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) ((i + 1) * 10), 
+				(float) (pixelHeight), 
+				(float) (j * 10) 
+				);    
+				
+			//Bottom Left (From Topdown)
+			glColor3f( 1/(2 - 0.5), 1/(0.4 + 2), 1/(2 - 0.3) );  //Colour so faces can be differentiated.
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) (i * 10), 
+				(float) (pixelHeight), 
+				(float) ((j + 1) * 10) 
+				);    
+				
+			//Bottom Right (From Topdown)
+			glColor3f( 1/(3 - 0.5), 1/(0.4 + 3), 1/(3 - 0.3) );  //Colour so faces can be differentiated.
+			//Draws Vertex, getting the coords from strArrVerts.
+			glVertex3f( 
+				(float) ((i + 1) * 10), 
+				(float) (pixelHeight), 
+				(float) ((j + 1) * 10) 
+				);   
+
+		glEnd();
+		}
 	}
- }
-						 				
- Output.SetBitDepth( 32 );
- cout << "writing Image ... " << endl;					
- Output.WriteToFile( "BWTEST.bmp" );
 
- return 0;
+	glFlush();
+	glutSwapBuffers();
 }
+*/

@@ -47,8 +47,5 @@
     <ClCompile Include="EasyBMP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestImageLoad.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

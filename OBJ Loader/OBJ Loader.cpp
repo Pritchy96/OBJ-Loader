@@ -123,6 +123,7 @@ void display(){
 			#pragma endregion
 
 			#pragma region LEFT_FACE
+			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Left (looking at face)
 				(float) (i), 
 				height, 
@@ -133,6 +134,8 @@ void display(){
 				height, 
 				(float) ((j + 1)) 
 				);  
+
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) (i), 
 				height - 10, 
@@ -146,6 +149,7 @@ void display(){
 			#pragma endregion
 
 			#pragma region TOP_FACE
+			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Right (looking at face)
 				(float) ((i + 1)), 
 				height, 
@@ -156,12 +160,14 @@ void display(){
 				height, 
 				(float) ((j + 1)) 
 				);  
+
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) ((i + 1)), 
 				height - 10, 
 				(float) ((j + 1)) 
 				);  
-			glVertex3f(		//Top Right (looking at face)
+			glVertex3f(		//Bottom Right (looking at face)
 				(float) ((i + 1)), 
 				height - 10, 
 				(float) (j) 
@@ -169,6 +175,7 @@ void display(){
 			#pragma endregion
 
 			#pragma region FRONT_FACE 
+			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Right (looking at face)
 				(float) ((i + 1)), 
 				height, 
@@ -179,6 +186,8 @@ void display(){
 				height, 
 				(float) ((j + 1)) 
 				);   
+
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) (i), 
 				height - 10, 
@@ -192,6 +201,7 @@ void display(){
 			#pragma endregion
 
 			#pragma region BACK_FACE
+			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Right (looking at face)
 				(float) (i), 
 				height, 
@@ -202,6 +212,8 @@ void display(){
 				height, 
 				(float) (j) 
 				);    
+
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) ((i + 1)), 
 				height - 10, 

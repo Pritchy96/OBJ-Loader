@@ -39,15 +39,11 @@ int wasMain();
 // Global Variables
 // ----------------------------------------------------------
 double rotate_y=0;
-double rotate_x=-60;
+double rotate_x=0;
 double rotate_z=0;
 double scale = 0.01;
 
-float lightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-float lightDiffuse[] = { 0.5f, 0.0f, 0.0f, 1.0f };
-float lightSpecular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-float lightPosition[] = { -200.0f, 200.0f, 300.0f, 0.0f };
-float lightDirection[] = { 200.0f, -200.0f, -300.0f };
+static float lightPos[] = {1.0, 0.0, 1.0, 1.0}; 
 
 bool debug = false;
 
@@ -55,6 +51,7 @@ bool debug = false;
 // display() Callback function
 //	-------------------------------------------------------
 void display(){
+
 
 #pragma region LOADING_IMAGE
 	BMP heightmap;
@@ -67,16 +64,10 @@ void display(){
 
 	// Reset transformations
 	glLoadIdentity();
-	gluLookAt( 10.0, 10.0, 10, 0, 0, 0, 2.0, 2.0, -1.0 );
 
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		
-		glTranslatef(lightDirection[0], lightDirection[1], lightDirection[2]);
-		GLfloat lpos[] = {0.0, 0.0, 0.0, 1.0};
-		glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-		glPopMatrix();
-		
+	// Other Transformations
+	// glTranslatef( 0.1, 0.0, 0.0 );
+
 	// Rotation.
 	glRotatef( rotate_x, 1.0, 0.0, 0.0 );
 	glRotatef( rotate_y, 0.0, 1.0, 0.0 );
@@ -104,14 +95,6 @@ void display(){
 			//Z = Depth = j.
 
 			float colour = ((float)(pixelHeight) / 255) * 1;
-			GLfloat cyan[] = {0.f, .8f, .8f, 1.f};
-
-			float matAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-			float matSpecular[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, cyan);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matAmbient);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, matSpecular);
 
 			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			float height = ((float) pixelHeight) / 10;
@@ -152,15 +135,15 @@ void display(){
 				(float) ((j + 1)) 
 				);  
 
-			glColor3f( colour - 0.4, colour - 0.4, colour - 0.4);  //Colour so faces can be differentiated.
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) (i), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) ((j + 1)) 
 				);  
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) (i), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) (j) 
 				);    
 			#pragma endregion
@@ -178,15 +161,15 @@ void display(){
 				(float) ((j + 1)) 
 				);  
 
-			glColor3f( colour - 0.4, colour - 0.4, colour - 0.4);  //Colour so faces can be differentiated.
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) ((i + 1)), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) ((j + 1)) 
 				);  
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) ((i + 1)), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) (j) 
 				);    
 			#pragma endregion
@@ -204,15 +187,15 @@ void display(){
 				(float) ((j + 1)) 
 				);   
 
-			glColor3f( colour - 0.4, colour - 0.4, colour - 0.4);  //Colour so faces can be differentiated.
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) (i), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) ((j + 1)) 
 				);  
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) ((i + 1)), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) ((j + 1)) 
 				);  
 			#pragma endregion
@@ -230,15 +213,15 @@ void display(){
 				(float) (j) 
 				);    
 
-			glColor3f( colour - 0.4, colour - 0.4, colour - 0.4);  //Colour so faces can be differentiated.
+			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) ((i + 1)), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) (j) 
 				);    
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) (i), 
-				height - (pixelHeight / 10), 
+				height - 10, 
 				(float) (j) 
 				);   
 			#pragma endregion
@@ -271,10 +254,10 @@ void specialKeys( int key, int x, int y ) {
 		rotate_x -= 5;
 		break;
 	case (GLUT_KEY_PAGE_UP):
-		scale += 0.001;
+		scale += 0.05;
 		break;
 	case (GLUT_KEY_PAGE_DOWN):
-		scale -= 0.001;
+		scale -= 0.01;
 		break;
 	case (GLUT_KEY_F4):
 		glutDestroyWindow(0);
@@ -283,6 +266,7 @@ void specialKeys( int key, int x, int y ) {
 	}
 	//  update display.
 	glutPostRedisplay();
+
 } 
 
 // ----------------------------------------------------------
@@ -302,7 +286,6 @@ int main(int argc, char* argv[]){
 	// Create window
 	glutCreateWindow("OBJ Loader");
 	// glutFullScreen();
-	glClearDepth(1);
 
 	//Enable Z-buffer depth test. Draws polys in 3d space: 
 	//no overlap with polys in front/behind (last drawn polies would be on top)
@@ -315,14 +298,19 @@ int main(int argc, char* argv[]){
 
 	//Lighting
 	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT0);
 
-	//glLightfv(GL_LIGHT0, GL_AMBIENT,lightAmbient);	//Setup The Ambient Light
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);	//Setup The Diffuse Light
-	//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);	//Position The Light
-	//glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 20.0f);
-	//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDirection);
+	// Create light components.
+	GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
+	GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	GLfloat position[] = { 0.0f, 2.0f, 1.0f, 1.0f };
+
+	// Assign created components to GL_LIGHT0.
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
 	// Callback functions
 	glutDisplayFunc(display);

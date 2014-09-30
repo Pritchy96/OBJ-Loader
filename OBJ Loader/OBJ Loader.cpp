@@ -54,8 +54,9 @@ void display(){
 
 
 #pragma region LOADING_IMAGE
-	BMP heightmap;
+	BMP heightmap, colourmap;
 	heightmap.ReadFromFile("HeightMap.bmp");
+	colourmap.ReadFromFile("ColourMap.bmp");
 #pragma endregion
 
 #pragma region SET_UP_OPENGL.
@@ -94,10 +95,12 @@ void display(){
 			//Y = Height = pixelHeight
 			//Z = Depth = j.
 
-			float colour = ((float)(pixelHeight) / 255) * 1;
+			glColor3f( 
+				(float) colourmap.GetPixel(iFromZero, jFromZero).Red / 255, 
+				(float) colourmap.GetPixel(iFromZero, jFromZero).Green / 255, 
+				(float) colourmap.GetPixel(iFromZero, jFromZero).Blue / 255);  //Colour so faces can be differentiated.
 
-			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
-			float height = ((float) pixelHeight) / 10;
+			float height = ((float) 255 - pixelHeight) / 10;
 
 			#pragma region TOP_FACE
 			glVertex3f(		//Top Left (looking at face)
@@ -123,7 +126,6 @@ void display(){
 			#pragma endregion
 
 			#pragma region LEFT_FACE
-			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Left (looking at face)
 				(float) (i), 
 				height, 
@@ -135,21 +137,19 @@ void display(){
 				(float) ((j + 1)) 
 				);  
 
-			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) (i), 
-				height - 10, 
+				0, 
 				(float) ((j + 1)) 
 				);  
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) (i), 
-				height - 10, 
+				0, 
 				(float) (j) 
 				);    
 			#pragma endregion
 
 			#pragma region TOP_FACE
-			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Right (looking at face)
 				(float) ((i + 1)), 
 				height, 
@@ -160,22 +160,19 @@ void display(){
 				height, 
 				(float) ((j + 1)) 
 				);  
-
-			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) ((i + 1)), 
-				height - 10, 
+				0, 
 				(float) ((j + 1)) 
 				);  
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) ((i + 1)), 
-				height - 10, 
+				0, 
 				(float) (j) 
 				);    
 			#pragma endregion
 
 			#pragma region FRONT_FACE 
-			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Right (looking at face)
 				(float) ((i + 1)), 
 				height, 
@@ -186,22 +183,19 @@ void display(){
 				height, 
 				(float) ((j + 1)) 
 				);   
-
-			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) (i), 
-				height - 10, 
+				0, 
 				(float) ((j + 1)) 
 				);  
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) ((i + 1)), 
-				height - 10, 
+				0, 
 				(float) ((j + 1)) 
 				);  
 			#pragma endregion
 
 			#pragma region BACK_FACE
-			glColor3f( colour, colour, colour);  //Colour so faces can be differentiated.
 			glVertex3f(		//Top Right (looking at face)
 				(float) (i), 
 				height, 
@@ -212,16 +206,14 @@ void display(){
 				height, 
 				(float) (j) 
 				);    
-
-			glColor3f( colour - 8, colour - 8, colour - 8);  //Colour so faces can be differentiated.
 			glVertex3f(		//Bottom Left (looking at face)
 				(float) ((i + 1)), 
-				height - 10, 
+				0, 
 				(float) (j) 
 				);    
 			glVertex3f(		//Bottom Right (looking at face)
 				(float) (i), 
-				height - 10, 
+				0, 
 				(float) (j) 
 				);   
 			#pragma endregion
@@ -242,22 +234,28 @@ void specialKeys( int key, int x, int y ) {
 	switch (key)
 	{
 	case (GLUT_KEY_RIGHT):
-		rotate_z += 5;
+		rotate_z += 2;
 		break;
 	case (GLUT_KEY_LEFT):
-		rotate_z -= 5;
+		rotate_z -= 2;
 		break;
 	case (GLUT_KEY_UP):
-		rotate_x += 5;
+		rotate_x += 2;
 		break;
 	case (GLUT_KEY_DOWN):
-		rotate_x -= 5;
+		rotate_x -= 2;
+		break;
+	case (GLUT_KEY_HOME):
+		rotate_y += 2;
+		break;
+	case (GLUT_KEY_END):
+		rotate_y -= 2;
 		break;
 	case (GLUT_KEY_PAGE_UP):
-		scale += 0.05;
+		scale += 0.0001;
 		break;
 	case (GLUT_KEY_PAGE_DOWN):
-		scale -= 0.01;
+		scale -= 0.0001;
 		break;
 	case (GLUT_KEY_F4):
 		glutDestroyWindow(0);
@@ -296,7 +294,7 @@ int main(int argc, char* argv[]){
 	//Change cull style.
 	//glCullFace(GL_FRONT);
 
-	//Lighting
+	/*Lighting
 	//glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
@@ -311,6 +309,7 @@ int main(int argc, char* argv[]){
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	*/
 
 	// Callback functions
 	glutDisplayFunc(display);

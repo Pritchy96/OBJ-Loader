@@ -234,28 +234,28 @@ void specialKeys( int key, int x, int y ) {
 	switch (key)
 	{
 	case (GLUT_KEY_RIGHT):
-		rotate_z += 2;
+		rotate_z += 20;
 		break;
 	case (GLUT_KEY_LEFT):
-		rotate_z -= 2;
+		rotate_z -= 20;
 		break;
 	case (GLUT_KEY_UP):
-		rotate_x += 2;
+		rotate_x += 20;
 		break;
 	case (GLUT_KEY_DOWN):
-		rotate_x -= 2;
+		rotate_x -= 20;
 		break;
 	case (GLUT_KEY_HOME):
-		rotate_y += 2;
+		rotate_y += 20;
 		break;
 	case (GLUT_KEY_END):
-		rotate_y -= 2;
+		rotate_y -= 20;
 		break;
 	case (GLUT_KEY_PAGE_UP):
-		scale += 0.0001;
+		scale += 0.001;
 		break;
 	case (GLUT_KEY_PAGE_DOWN):
-		scale -= 0.0001;
+		scale -= 0.001;
 		break;
 	case (GLUT_KEY_F4):
 		glutDestroyWindow(0);

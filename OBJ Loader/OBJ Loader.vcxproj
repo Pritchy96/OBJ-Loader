@@ -83,16 +83,20 @@
     <ClInclude Include="EasyBMP_BMP.h" />
     <ClInclude Include="EasyBMP_DataStructures.h" />
     <ClInclude Include="EasyBMP_VariousBMPutilities.h" />
+    <ClInclude Include="Fractal_Creator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EasyBMP.cpp" />
+    <ClCompile Include="Fractal_Creator.cpp" />
     <ClCompile Include="OBJ Loader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

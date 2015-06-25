@@ -50,19 +50,12 @@ bool debug = false;
 
 
 const int width = 600, height = 600;
-
+vector<vector<int>> map;
 
 //	-------------------------------------------------------
 // display() Callback function
 //	-------------------------------------------------------
 void display(){
-
-
-#pragma region LOADING_IMAGE
-	BMP heightmap, colourmap;
-	heightmap.ReadFromFile("HeightMap.bmp");
-	colourmap.ReadFromFile("ColourMap.bmp");
-#pragma endregion
 
 #pragma region SET_UP_OPENGL.
 	//  Clear screen and Z-buffer
@@ -84,15 +77,15 @@ void display(){
 #pragma endregion
 
 	//Iterate through bitmap
-	for (int i = -(heightmap.TellWidth() / 2); i < (heightmap.TellWidth()/2); i++)	//Goes from -100 to + 100 rather than 0 - 200 so camera is centered.
+	for (int i = -(width / 2); i < (width/2); i++)	//Goes from -100 to + 100 rather than 0 - 200 so camera is centered.
 	{
-		for (int j = -(heightmap.TellHeight() / 2); (j < heightmap.TellHeight() / 2); j++) //As above. This means some statements below use (+ heightmap.TellHeight()/2) to make it 0 - 200 again.
+		for (int j = -(height / 2); (j < height / 2); j++) //As above. This means some statements below use (+ heightmap.TellHeight()/2) to make it 0 - 200 again.
 		{
-			int iFromZero = i + (heightmap.TellWidth()/2);
-			int jFromZero = j + (heightmap.TellHeight()/2);
+			int iFromZero = i + (width/2);
+			int jFromZero = j + (height/2);
 
 			//Pixel Height/RBG Value
-			int pixelHeight = heightmap.GetPixel(iFromZero, jFromZero).Blue;
+			int pixelHeight = map[iFromZero][jFromZero];
 
 			glBegin(GL_POLYGON);	//Must be called for each face.
 
@@ -101,11 +94,11 @@ void display(){
 			//Z = Depth = j.
 
 			glColor3f( 
-				(float) colourmap.GetPixel(iFromZero, jFromZero).Red / 255, 
-				(float) colourmap.GetPixel(iFromZero, jFromZero).Green / 255, 
-				(float) colourmap.GetPixel(iFromZero, jFromZero).Blue / 255);  //Colour so faces can be differentiated.
+				(float) 0.0, 
+				(float) 0.0, 
+				(float) map[iFromZero][jFromZero] / 255);  //Colour so faces can be differentiated.
 
-			float height = ((float) 255 - pixelHeight) / 10;
+			float height = ((float) 255 - pixelHeight);
 
 			#pragma region TOP_FACE
 			glVertex3f(		//Top Left (looking at face)
@@ -278,7 +271,7 @@ void specialKeys( int key, int x, int y ) {
 int main(int argc, char* argv[]){
 	Util::SeedGenerator(0);
 	Fractal_Creator maker = Fractal_Creator();
-	vector<vector<int>> map = maker.MakeFractal(600, 600);
+	map = maker.MakeFractal(600, 600);
 
 
 

@@ -47,10 +47,6 @@ vector<vector<int>> Fractal_Creator::MakeFractal(int width, int height, int Roug
 	return map;
 }
 
-
-
-
-
 /// <summary>
 /// </summary>
 /// <param name="colMapRgbValues"> Array of BGR Bytes </param>

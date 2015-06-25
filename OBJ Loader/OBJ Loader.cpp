@@ -14,6 +14,7 @@
 #include <vector>
 #include "Fractal_Creator.h"
 #include "EasyBMP.h"
+#include "Island_Utils.h"
 
 
 #include <stdarg.h>
@@ -34,6 +35,7 @@ using namespace std;
 void display();
 void specialKeys();
 void ReadFile();
+int main(int argc, char* argv[]);
 int wasMain();
 
 // ----------------------------------------------------------
@@ -49,8 +51,8 @@ static float lightPos[] = {1.0, 0.0, 1.0, 1.0};
 bool debug = false;
 
 
-const int width = 600, height = 600;
-vector<vector<int>> map;
+const int width = 200, height = 200;
+vector<vector<int>> islandFractal, islandShape, temperateFractal, heightFractal, rainFractal, islandColoured, gradientMap;
 
 //	-------------------------------------------------------
 // display() Callback function
@@ -85,7 +87,7 @@ void display(){
 			int jFromZero = j + (height/2);
 
 			//Pixel Height/RBG Value
-			int pixelHeight = map[iFromZero][jFromZero];
+			int pixelHeight = heightFractal[iFromZero][jFromZero];
 
 			glBegin(GL_POLYGON);	//Must be called for each face.
 
@@ -93,12 +95,16 @@ void display(){
 			//Y = Height = pixelHeight
 			//Z = Depth = j.
 
-			glColor3f( 
-				(float) 0.0, 
-				(float) 0.0, 
-				(float) map[iFromZero][jFromZero] / 255);  //Colour so faces can be differentiated.
+		vector<int> colour = vector<int>();
+		colour.resize(3);
+		colour = Island_Utils::GetBiomeColour(islandColoured[iFromZero][jFromZero]);
 
-			float height = ((float) 255 - pixelHeight);
+			glColor3f( 
+				(float) (((float)colour[0] + (heightFractal[iFromZero][jFromZero]/5))/255), 
+				(float) (((float)colour[1] + (heightFractal[iFromZero][jFromZero]/5))/255), 
+				(float) (((float)colour[2] + (heightFractal[iFromZero][jFromZero]/5))/255));
+
+			float height = ((float) pixelHeight)/10;
 
 			#pragma region TOP_FACE
 			glVertex3f(		//Top Left (looking at face)
@@ -271,9 +277,18 @@ void specialKeys( int key, int x, int y ) {
 int main(int argc, char* argv[]){
 	Util::SeedGenerator(0);
 	Fractal_Creator maker = Fractal_Creator();
-	map = maker.MakeFractal(600, 600);
 
+	islandFractal = maker.MakeFractal(width, height, 12, 0, 1);
+	islandShape = Island_Utils::ShapeIsland(&islandFractal);
+	temperateFractal = maker.MakeFractal(width, height, 4, 100, 0);
+	rainFractal = maker.MakeFractal(width, height, 4, 100, 0);
 
+	gradientMap = Island_Utils::MakeCircularGradient(width, height, 255, 0);
+	heightFractal = maker.MakeFractal(width, height, 13, 255, 0); 
+	heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.3, 1);
+	temperateFractal = Island_Utils::InterpolateBitmaps(&temperateFractal, &gradientMap, 1, 1, 0);
+	
+	islandColoured = Island_Utils::CalculateBiomes(&islandFractal, &islandShape, &heightFractal, &temperateFractal, &rainFractal);
 
 
 	//  Initialize GLUT and process user parameters
@@ -293,13 +308,13 @@ int main(int argc, char* argv[]){
 	//no overlap with polys in front/behind (last drawn polies would be on top)
 	glEnable(GL_DEPTH_TEST);
 
-	//Only render polys facing the viewport.
+	//Only render polys facing the viewport. Creates graphical glitches.
 	//glEnable(GL_CULL_FACE);
 	//Change cull style.
 	//glCullFace(GL_FRONT);
-
-	/*Lighting
 	//glEnable(GL_LIGHTING);
+	/*Lighting
+	//
 	glEnable(GL_LIGHT0);
 
 	// Create light components.

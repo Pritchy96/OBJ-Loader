@@ -84,6 +84,7 @@
     <ClInclude Include="EasyBMP_DataStructures.h" />
     <ClInclude Include="EasyBMP_VariousBMPutilities.h" />
     <ClInclude Include="Fractal_Creator.h" />
+    <ClInclude Include="Island_Utils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Util.h" />
@@ -91,6 +92,7 @@
   <ItemGroup>
     <ClCompile Include="EasyBMP.cpp" />
     <ClCompile Include="Fractal_Creator.cpp" />
+    <ClCompile Include="Island_Utils.cpp" />
     <ClCompile Include="OBJ Loader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

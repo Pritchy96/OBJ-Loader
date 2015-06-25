@@ -4,6 +4,7 @@
 #include "Util.h"
 #include <vector>
 #include <cstdlib>
+using namespace std;
 
 static class Fractal_Creator
 {
@@ -13,7 +14,7 @@ public:
 	double Fractal_Creator::Displace(double rectSize, int roughness);
 	double Fractal_Creator::Round(double num);
 	void Fractal_Creator::Divide(std::vector<std::vector<int>> *mapRgbValues, double x, double y, double width, double height, int roughness, double c1, double c2, double c3, double c4, int minValue, int maxValue);
-	std::vector<std::vector<int>> Fractal_Creator::MakeFractal(int width, int height, int Roughness = 13, int maxValue = 255, int minValue = 0);
+	vector<vector<int>> Fractal_Creator::MakeFractal(int width, int height, int Roughness = 13, int maxValue = 255, int minValue = 0);
 
 };
 

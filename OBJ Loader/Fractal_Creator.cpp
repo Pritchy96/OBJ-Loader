@@ -6,29 +6,50 @@
 #include "Util.h"
 #include <vector>
 #include <cstdlib>
+#include <math.h>
 using namespace std;
 
 // ----------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------C:\Windows\SysWOW64
 void display();
-void MakeFractal();
-void Divide();
-void Round();
-double Displace();
-
+double Displace(double rectSize, int roughness);
+double Round(double num);
+void Divide(vector<vector<int>> *mapRgbValues, double x, double y, double width, double height, int roughness, double c1, double c2, double c3, double c4, int minValue, int maxValue);
+vector<vector<int>> MakeFractal(int width, int height, int Roughness, int maxValue, int minValue);
 
 
 // ----------------------------------------------------------
 // Global Variables
 // ----------------------------------------------------------
-const int width = 600, height = 600;
 double screenSize = 0;   //Width + Height of screen.
 
-void MakeFractal(){
-	vector<vector<int>> test;
 
+vector<vector<int>> Fractal_Creator::MakeFractal(int width, int height, int Roughness, int maxValue, int minValue)
+{
+	screenSize = width + height;
+	double maxDistance = 0, centerX = width / 2, centerY = height / 2;
+	maxDistance = sqrt((pow(centerX, 2)) + (pow(centerY, 2)));
+
+	vector<vector<int>>  map = vector<vector<int>>();
+	//Resizing array and setting all values to 0.
+	map.resize( width , vector<int>( height, 0 ) );
+
+	//Calculate corner values (c1, c2, c3, c4).
+	double c1 = Util::RandomDouble(1, 0);
+	double c2 = Util::RandomDouble(1, 0);
+	double c3 = Util::RandomDouble(1, 0);
+	double c4 = Util::RandomDouble(1, 0);
+
+	//Call Divide, begin the iteration.
+	Divide(&map, 0, 0, width, height, Roughness, c1, c2, c3, c4, minValue, maxValue);
+
+	return map;
 }
+
+
+
+
 
 /// <summary>
 /// </summary>
@@ -42,8 +63,7 @@ void MakeFractal(){
 /// <param name="c2"></param>
 /// <param name="c3"></param>
 /// <param name="c4"></param>
- void Divide(vector<vector<int>> mapRgbValues, double x, double y, double width, double height, int roughness, double c1,
-	double c2, double c3, double c4, int minValue, int maxValue)
+void Fractal_Creator::Divide(vector<vector<int>> *mapRgbValues, double x, double y, double width, double height, int roughness, double c1, double c2, double c3, double c4, int minValue, int maxValue)
 {
 	//X and Y are the old c1 coordinates from the last recursive iteration.
 
@@ -69,23 +89,23 @@ void MakeFractal(){
 		mid4 = Round((c3 + c4) / 2);
 
 		//Call divide to calculate the middle of the new rectangles.
-		Divide(mapRgbValues, x, y, newWidth, newHeight, c1, mid1, mid2, middle, minValue, maxValue);
-		Divide(mapRgbValues, x + newWidth, y, width - newWidth, newHeight, mid1, c2, middle, mid3, minValue, maxValue);
-		Divide(mapRgbValues, x, y + newHeight, newWidth, height - newHeight, mid2, middle, c3, mid4, minValue, maxValue);
-		Divide(mapRgbValues, x + newWidth, y + newHeight, width - newWidth, height - newHeight, middle, mid3, mid4, c4, minValue, maxValue);
+		Divide(mapRgbValues, x, y, newWidth, newHeight, roughness, c1, mid1, mid2, middle, minValue, maxValue);
+		Divide(mapRgbValues, x + newWidth, y, width - newWidth, newHeight, roughness, mid1, c2, middle, mid3, minValue, maxValue);
+		Divide(mapRgbValues, x, y + newHeight, newWidth, height - newHeight, roughness, mid2, middle, c3, mid4, minValue, maxValue);
+		Divide(mapRgbValues, x + newWidth, y + newHeight, width - newWidth, height - newHeight, roughness, middle, mid3, mid4, c4, minValue, maxValue);
 	}
 	//If our rectangles are now 1px x 1px, we are ready to calculate final values and draw.
-	else
+	else 
 	{
 		//Average the points of the pixel sized rectangle down into a single number, which is that pixels final gradientValue.
 		double heightValue = (c1 + c2 + c3 + c4) / 4;   //Height value generated from random plasma noise.
-		//Setting the final value for this pixel.
-		mapRgbValues[(int)x][(int)y] = (int)((heightValue * (maxValue - minValue)) - minValue);
+		//Setting the final value for this pixel.+
+		(*mapRgbValues)[Util::Round(x)][Util::Round(y)] = (int)((heightValue * (maxValue - minValue)) - minValue);
 	}
 }
 
 //Makes sure values stay within limits.
-static double Round(double num)
+double Fractal_Creator::Round(double num)
 {
 	if (num > 1)
 		return 1;
@@ -96,15 +116,11 @@ static double Round(double num)
 }
 
 //Displaces gradientValue a small amount.
-static double Displace(double rectSize, int roughness)
+double Fractal_Creator::Displace(double rectSize, int roughness)
 {
 	double Max = rectSize / screenSize * roughness;
-	return (Util::RandomDouble(1, -1) - 0.5) * Max;
+	return (Util::RandomDouble(1, 0) - 0.5) * Max;
 }
-
-
-
-
 
 Fractal_Creator::~Fractal_Creator(void)
 {

@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include "Fractal_Creator.h"
 #include "EasyBMP.h"
 
 
@@ -46,6 +47,10 @@ double scale = 0.01;
 static float lightPos[] = {1.0, 0.0, 1.0, 1.0}; 
 
 bool debug = false;
+
+
+const int width = 600, height = 600;
+
 
 //	-------------------------------------------------------
 // display() Callback function
@@ -271,6 +276,12 @@ void specialKeys( int key, int x, int y ) {
 // main() function
 // ----------------------------------------------------------
 int main(int argc, char* argv[]){
+	Util::SeedGenerator(0);
+	Fractal_Creator maker = Fractal_Creator();
+	vector<vector<int>> map = maker.MakeFractal(600, 600);
+
+
+
 
 	//  Initialize GLUT and process user parameters
 	glutInit(&argc,argv);

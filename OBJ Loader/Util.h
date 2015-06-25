@@ -1,10 +1,11 @@
-#pragma once
+//#pragma once
 
 
 	namespace Util
 	{
-	extern int seed;
-	int RandomInt(int max, int min, int newSeed = seed);
-	double RandomDouble(double max, double min, int newSeed = seed);
-	void SeedGenerator(int seed = NULL);
-	}
+	extern int global_seed;
+	int RandomInt(int max, int min);
+	double RandomDouble(double max, double min);
+	void SeedGenerator(int seed);
+	int Round(double d);
+	};

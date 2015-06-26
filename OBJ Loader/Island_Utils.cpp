@@ -30,6 +30,7 @@ namespace Island_Utils
 		{
 			for (int y = 0; y < height; y++)
 			{
+
 #pragma region Generating Island Shape
 				double distX = abs(x - centerX), distY = abs(y - centerY);    //Distance fron center in x and y.
 				double distance = sqrt(pow(distX, 2) + pow(distY, 2));   //Distance from center.
@@ -38,30 +39,31 @@ namespace Island_Utils
 				double gradientValue = ((distance / maxDistance));  //Gradient used to get an island shape
 				int gradientStrength = 255; //how prevalent the Circular gradient is in the final value. Reduce to make reduce the centering effect. Not reccomended to change below 255.
 				int heightStrength = 100;   //How prevalant the heightmap is in the final value. Reduce for smaller, less chaotic islands.
-				int offset = 90;    //Offset used to make boost the value to make bigger islands. Reduce for smaller islands.
+				int offset = -90;    //Offset used to make boost the value to make bigger islands. Reduce for smaller islands.
 
-				double finalValue = (double)((heightStrength * heightValue) - (gradientValue * gradientStrength) + offset); //Construct the final value for the island.
+				double finalValue = (double)abs((heightStrength * heightValue) + (gradientValue * gradientStrength) + offset); //Construct the final value for the island.
 #pragma endregion
 
 #pragma region Removing Fractal (blue for land, black for sea).
 				//Keep value between 0 and 255
-				if (finalValue > 109 || distance > maxDistance - 50)    //If we're high enough to be considered ocean or close to the edge.
+				if (finalValue > 109 || distance > (maxDistance*3/4))    //If we're high enough to be considered ocean or close to the edge.
 				{
 					//If we're close to the center and it's going to be water, instead make it land.  
-					if (distance < maxDistance/6)
-					{
-						finalValue = 255;
+					//if (distance < 170)
+					//{
+					//	finalValue = 0;
 						//finalValue = (byte)Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(-5, 5))));
-					}
-					else //Otherwise make it sea.
-					{
-						finalValue = 0;
-					}
+					//}
+					//else //Otherwise make it sea.
+					//{
+						finalValue = 255;
+					//}
 				}
+				
 				else
 				{
-					finalValue = 255;
-					//finalValue = (byte)Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(-5, 5))));
+					finalValue = 0;
+					//finalValue = (byte)Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(170-5, 5))));
 				}
 #pragma endregion
 
@@ -86,7 +88,7 @@ namespace Island_Utils
 			for (int y = 0; y < height; y++)
 			{
 
-				if ((*islandShape)[x][y] == 255)  //Land
+				if ((*islandShape)[x][y] == 0)  //Land
 				{
 					if ((*tempFractal)[x][y] < 20)
 					{

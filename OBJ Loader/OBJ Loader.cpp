@@ -93,7 +93,7 @@ void display(){
 
 			//X = Width = i
 			//Y = Height = pixelHeight
-			//Z = Depth = j.
+			//Z = Depth = j
 
 		vector<int> colour = vector<int>();
 		colour.resize(3);
@@ -104,7 +104,7 @@ void display(){
 				(float) (((float)colour[1] + (heightFractal[iFromZero][jFromZero]/5))/255), 
 				(float) (((float)colour[2] + (heightFractal[iFromZero][jFromZero]/5))/255));
 
-			float height = ((float) pixelHeight)/10;
+			float height = ((float)300- pixelHeight)/10;
 
 			#pragma region TOP_FACE
 			glVertex3f(		//Top Left (looking at face)
@@ -238,28 +238,28 @@ void specialKeys( int key, int x, int y ) {
 	switch (key)
 	{
 	case (GLUT_KEY_RIGHT):
-		rotate_z += 20;
+		rotate_z += 10;
 		break;
 	case (GLUT_KEY_LEFT):
-		rotate_z -= 20;
+		rotate_z -= 10;
 		break;
 	case (GLUT_KEY_UP):
-		rotate_x += 20;
+		rotate_x += 10;
 		break;
 	case (GLUT_KEY_DOWN):
-		rotate_x -= 20;
+		rotate_x -= 10;
 		break;
 	case (GLUT_KEY_HOME):
-		rotate_y += 20;
+		rotate_y += 10;
 		break;
 	case (GLUT_KEY_END):
-		rotate_y -= 20;
+		rotate_y -= 10;
 		break;
 	case (GLUT_KEY_PAGE_UP):
-		scale += 0.001;
+		scale += 0.01;
 		break;
 	case (GLUT_KEY_PAGE_DOWN):
-		scale -= 0.001;
+		scale -= 0.005;
 		break;
 	case (GLUT_KEY_F4):
 		glutDestroyWindow(0);
@@ -278,14 +278,15 @@ int main(int argc, char* argv[]){
 	Util::SeedGenerator(0);
 	Fractal_Creator maker = Fractal_Creator();
 
-	islandFractal = maker.MakeFractal(width, height, 12, 0, 1);
+	islandFractal = maker.MakeFractal(width, height, 12);
 	islandShape = Island_Utils::ShapeIsland(&islandFractal);
+
 	temperateFractal = maker.MakeFractal(width, height, 4, 100, 0);
 	rainFractal = maker.MakeFractal(width, height, 4, 100, 0);
-
 	gradientMap = Island_Utils::MakeCircularGradient(width, height, 255, 0);
-	heightFractal = maker.MakeFractal(width, height, 13, 255, 0); 
-	heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.3, 1);
+
+	heightFractal = maker.MakeFractal(width, height, 12); 
+	heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.5, 1);
 	temperateFractal = Island_Utils::InterpolateBitmaps(&temperateFractal, &gradientMap, 1, 1, 0);
 	
 	islandColoured = Island_Utils::CalculateBiomes(&islandFractal, &islandShape, &heightFractal, &temperateFractal, &rainFractal);

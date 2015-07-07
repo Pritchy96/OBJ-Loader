@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <math.h>
 #include "Util.h"
+#include "EasyBMP.h"
 using namespace std;
 // ----------------------------------------------------------
 // Function Prototypes
@@ -409,5 +410,26 @@ namespace Island_Utils
 			}
 		}
 		return newBmp;
+	}
+
+	BMP save(vector<vector<int>>*  array)
+	{
+		BMP image;
+		int width = (*array).size(), height = (*array)[0].size();
+		image.SetSize(width, height);
+		image.SetBitDepth(32);
+
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				vector<int> colour = Island_Utils::GetBiomeColour(*array[x][y]);
+				image(x, y)->Red = colour[0];
+				image(x, y)->Green = colour[1];
+				image(x, y)->Blue = colour[2];
+			}
+		}
+
+		image.WriteToFile("output.bmp");
 	}
 }

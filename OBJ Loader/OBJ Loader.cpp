@@ -19,13 +19,6 @@
 
 #include <stdarg.h>
 #include <math.h>
-#define GL_GLEXT_PROTOTYPES
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
 using namespace std;
 
 
@@ -33,7 +26,6 @@ using namespace std;
 // Function Prototypes
 // ----------------------------------------------------------C:\Windows\SysWOW64
 void display();
-void specialKeys();
 void ReadFile();
 int main(int argc, char* argv[]);
 int wasMain();
@@ -46,230 +38,13 @@ double rotate_x=0;
 double rotate_z=0;
 double scale = 0.01;
 
-static float lightPos[] = {1.0, 0.0, 1.0, 1.0}; 
-
 bool debug = false;
 
 
 const int width = 200, height = 200;
 vector<vector<int>> islandFractal, islandShape, temperateFractal, heightFractal, rainFractal, islandColoured, gradientMap;
 
-//	-------------------------------------------------------
-// display() Callback function
-//	-------------------------------------------------------
-void display(){
 
-#pragma region SET_UP_OPENGL.
-	//  Clear screen and Z-buffer
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-	// Reset transformations
-	glLoadIdentity();
-
-	// Other Transformations
-	// glTranslatef( 0.1, 0.0, 0.0 );
-
-	// Rotation.
-	glRotatef( rotate_x, 1.0, 0.0, 0.0 );
-	glRotatef( rotate_y, 0.0, 1.0, 0.0 );
-	glRotatef(rotate_z, 0.0, 0.0, 1.0);
-
-	// Other Transformations
-	glScalef( scale, scale, scale ); 
-#pragma endregion
-
-	//Iterate through bitmap
-	for (int i = -(width / 2); i < (width/2); i++)	//Goes from -100 to + 100 rather than 0 - 200 so camera is centered.
-	{
-		for (int j = -(height / 2); (j < height / 2); j++) //As above. This means some statements below use (+ heightmap.TellHeight()/2) to make it 0 - 200 again.
-		{
-			int iFromZero = i + (width/2);
-			int jFromZero = j + (height/2);
-
-			//Pixel Height/RBG Value
-			int pixelHeight = heightFractal[iFromZero][jFromZero];
-
-			glBegin(GL_POLYGON);	//Must be called for each face.
-
-			//X = Width = i
-			//Y = Height = pixelHeight
-			//Z = Depth = j
-
-		vector<int> colour = vector<int>();
-		colour.resize(3);
-		colour = Island_Utils::GetBiomeColour(islandColoured[iFromZero][jFromZero]);
-
-			glColor3f( 
-				(float) (((float)colour[0] + (heightFractal[iFromZero][jFromZero]/5))/255), 
-				(float) (((float)colour[1] + (heightFractal[iFromZero][jFromZero]/5))/255), 
-				(float) (((float)colour[2] + (heightFractal[iFromZero][jFromZero]/5))/255));
-
-			float height = ((float)300- pixelHeight)/10;
-
-			#pragma region TOP_FACE
-			glVertex3f(		//Top Left (looking at face)
-				(float) (i), 
-				height, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Top Right (looking at face)
-				(float) ((i + 1)), 
-				height, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Bottom Right (looking at face)
-				(float) ((i + 1)), 
-				height, 
-				(float) ((j + 1)) 
-				);  
-			glVertex3f(		//Bottom Left (looking at face)
-				(float) (i), 
-				height, 
-				(float) ((j + 1)) 
-				);    
-			#pragma endregion
-
-			#pragma region LEFT_FACE
-			glVertex3f(		//Top Left (looking at face)
-				(float) (i), 
-				height, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Top Right (looking at face)
-				(float) (i), 
-				height, 
-				(float) ((j + 1)) 
-				);  
-
-			glVertex3f(		//Bottom Right (looking at face)
-				(float) (i), 
-				0, 
-				(float) ((j + 1)) 
-				);  
-			glVertex3f(		//Bottom Left (looking at face)
-				(float) (i), 
-				0, 
-				(float) (j) 
-				);    
-			#pragma endregion
-
-			#pragma region TOP_FACE
-			glVertex3f(		//Top Right (looking at face)
-				(float) ((i + 1)), 
-				height, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Top Left (looking at face)
-				(float) ((i + 1)), 
-				height, 
-				(float) ((j + 1)) 
-				);  
-			glVertex3f(		//Bottom Left (looking at face)
-				(float) ((i + 1)), 
-				0, 
-				(float) ((j + 1)) 
-				);  
-			glVertex3f(		//Bottom Right (looking at face)
-				(float) ((i + 1)), 
-				0, 
-				(float) (j) 
-				);    
-			#pragma endregion
-
-			#pragma region FRONT_FACE 
-			glVertex3f(		//Top Right (looking at face)
-				(float) ((i + 1)), 
-				height, 
-				(float) ((j + 1)) 
-				);  
-			glVertex3f(		//Top Left (looking at face)
-				(float) (i), 
-				height, 
-				(float) ((j + 1)) 
-				);   
-			glVertex3f(		//Bottom Left (looking at face)
-				(float) (i), 
-				0, 
-				(float) ((j + 1)) 
-				);  
-			glVertex3f(		//Bottom Right (looking at face)
-				(float) ((i + 1)), 
-				0, 
-				(float) ((j + 1)) 
-				);  
-			#pragma endregion
-
-			#pragma region BACK_FACE
-			glVertex3f(		//Top Right (looking at face)
-				(float) (i), 
-				height, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Top Left (looking at face)
-				(float) ((i + 1)), 
-				height, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Bottom Left (looking at face)
-				(float) ((i + 1)), 
-				0, 
-				(float) (j) 
-				);    
-			glVertex3f(		//Bottom Right (looking at face)
-				(float) (i), 
-				0, 
-				(float) (j) 
-				);   
-			#pragma endregion
-			glEnd();
-		}
-	}
-
-	glFlush();
-	glutSwapBuffers();
-}
-
-// ----------------------------------------------------------
-// specialKeys() Callback Function
-// ----------------------------------------------------------
-void specialKeys( int key, int x, int y ) {
-
-	//Increase/Decrease Rotation. (degrees)
-	switch (key)
-	{
-	case (GLUT_KEY_RIGHT):
-		rotate_z += 10;
-		break;
-	case (GLUT_KEY_LEFT):
-		rotate_z -= 10;
-		break;
-	case (GLUT_KEY_UP):
-		rotate_x += 10;
-		break;
-	case (GLUT_KEY_DOWN):
-		rotate_x -= 10;
-		break;
-	case (GLUT_KEY_HOME):
-		rotate_y += 10;
-		break;
-	case (GLUT_KEY_END):
-		rotate_y -= 10;
-		break;
-	case (GLUT_KEY_PAGE_UP):
-		scale += 0.01;
-		break;
-	case (GLUT_KEY_PAGE_DOWN):
-		scale -= 0.005;
-		break;
-	case (GLUT_KEY_F4):
-		glutDestroyWindow(0);
-		exit(0);
-		break;
-	}
-	//  update display.
-	glutPostRedisplay();
-
-} 
 
 // ----------------------------------------------------------
 // main() function
@@ -292,55 +67,12 @@ int main(int argc, char* argv[]){
 	islandColoured = Island_Utils::CalculateBiomes(&islandFractal, &islandShape, &heightFractal, &temperateFractal, &rainFractal);
 
 
-	//  Initialize GLUT and process user parameters
-	glutInit(&argc,argv);
-
-	//  Request double buffered true color window with Z-buffer
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-
-	glutInitWindowSize (900, 900); 
-	glutInitWindowPosition (0, 0);
-
-	// Create window
-	glutCreateWindow("OBJ Loader");
-	// glutFullScreen();
-
-	//Enable Z-buffer depth test. Draws polys in 3d space: 
-	//no overlap with polys in front/behind (last drawn polies would be on top)
-	glEnable(GL_DEPTH_TEST);
-
-	//Only render polys facing the viewport. Creates graphical glitches.
-	//glEnable(GL_CULL_FACE);
-	//Change cull style.
-	//glCullFace(GL_FRONT);
-	//glEnable(GL_LIGHTING);
-	/*Lighting
-	//
-	glEnable(GL_LIGHT0);
-
-	// Create light components.
-	GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-	GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	GLfloat position[] = { 0.0f, 2.0f, 1.0f, 1.0f };
-
-	// Assign created components to GL_LIGHT0.
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	*/
-
-	// Callback functions
-	glutDisplayFunc(display);
-	glutSpecialFunc(specialKeys);
-
-	//  Pass control to GLUT for events
-	glutMainLoop();
-
 	//  Return to OS
 	return 0;
 }
+
+
+
 
 /*
 //	-------------------------------------------------------

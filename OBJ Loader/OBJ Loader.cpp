@@ -41,7 +41,7 @@ double scale = 0.01;
 bool debug = false;
 
 
-const int width = 200, height = 200;
+const int width = 2000, height = 2000;
 vector<vector<int>> islandFractal, islandShape, temperateFractal, heightFractal, rainFractal, islandColoured, gradientMap;
 
 
@@ -53,20 +53,56 @@ int main(int argc, char* argv[]){
 	Util::SeedGenerator(0);
 	Fractal_Creator maker = Fractal_Creator();
 
+	cout << "Generating Island Fractal" << endl;
 	islandFractal = maker.MakeFractal(width, height, 12);
+
+	cout << "Generating Island Shape" << endl;
 	islandShape = Island_Utils::ShapeIsland(&islandFractal);
 
+	cout << "Generating Temperate Fractal" << endl;
 	temperateFractal = maker.MakeFractal(width, height, 4, 100, 0);
+
+	cout << "Generating Rain Fractal" << endl;
 	rainFractal = maker.MakeFractal(width, height, 4, 100, 0);
+
+	cout << "Generating Gradient Map" << endl;
 	gradientMap = Island_Utils::MakeCircularGradient(width, height, 255, 0);
 
-	heightFractal = maker.MakeFractal(width, height, 12); 
-	heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.5, 1);
+	cout << "Generating Height Fractal" << endl;
+	heightFractal = maker.MakeFractal(width, height, 12);
+
+	cout << "Interpolating Height Fractal with Gradient Map" << endl;
+	heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.8, 1);
+
+	cout << "Interpolating TemperateFractal with Gradient Map" << endl;
 	temperateFractal = Island_Utils::InterpolateBitmaps(&temperateFractal, &gradientMap, 1, 1, 0);
 	
+	cout << "Calculating Biomes" << endl;
 	islandColoured = Island_Utils::CalculateBiomes(&islandFractal, &islandShape, &heightFractal, &temperateFractal, &rainFractal);
 
 
+
+
+	cout << "Saving IslandFractal.bmp" << endl;
+	Island_Utils::SaveImage(&islandFractal, "IslandFractal.bmp");
+
+	cout << "Saving IslandShape.bmp" << endl;
+	Island_Utils::SaveImage(&islandShape, "IslandShape.bmp");
+
+	cout << "Saving TemperateFractal.bmp" << endl;
+	Island_Utils::SaveImage(&temperateFractal, "TemperateFractal.bmp");
+
+	cout << "Saving RainFractal.bmp" << endl;
+	Island_Utils::SaveImage(&rainFractal, "RainFractal.bmp");
+
+	cout << "Saving HeightFractal.bmp" << endl;
+	Island_Utils::SaveImage(&heightFractal, "HeightFractal.bmp");
+
+	cout << "Saving GradientMap.bmp" << endl;
+	Island_Utils::SaveImage(&gradientMap, "GradientMap.bmp");
+
+	cout << "Saving IslandColoured.bmp" << endl;
+	Island_Utils::SaveBiomeImage(&islandColoured, "IslandColoured.bmp");
 	//  Return to OS
 	return 0;
 }

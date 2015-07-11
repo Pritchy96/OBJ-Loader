@@ -412,7 +412,7 @@ namespace Island_Utils
 		return newBmp;
 	}
 
-	BMP save(vector<vector<int>>*  array)
+	void SaveImage(vector<vector<int>>*  array, string imageName)
 	{
 		BMP image;
 		int width = (*array).size(), height = (*array)[0].size();
@@ -423,13 +423,37 @@ namespace Island_Utils
 		{
 			for (int y = 0; y < height; y++)
 			{
-				vector<int> colour = Island_Utils::GetBiomeColour(*array[x][y]);
+				//vector<int> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
+				image(x, y)->Red = (*array)[x][y];
+				image(x, y)->Green = (*array)[x][y];
+				image(x, y)->Blue = (*array)[x][y];
+			}
+		}
+
+		const char *cstr = imageName.c_str();
+		image.WriteToFile(cstr);
+	}
+	
+	void SaveBiomeImage(vector<vector<int>>*  array, string imageName)
+	{
+		BMP image;
+		int width = (*array).size(), height = (*array)[0].size();
+		image.SetSize(width, height);
+		image.SetBitDepth(32);
+
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				vector<int> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
 				image(x, y)->Red = colour[0];
 				image(x, y)->Green = colour[1];
 				image(x, y)->Blue = colour[2];
 			}
 		}
 
-		image.WriteToFile("output.bmp");
+		const char *cstr = imageName.c_str();
+		image.WriteToFile(cstr);
 	}
+	
 }

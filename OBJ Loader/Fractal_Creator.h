@@ -6,7 +6,7 @@
 #include <cstdlib>
 using namespace std;
 
-static class Fractal_Creator
+class Fractal_Creator
 {
 public:
 	Fractal_Creator(void);
